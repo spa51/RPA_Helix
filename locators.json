@@ -1,0 +1,406 @@
+{
+    "Ingresar": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+        "strategy": "id",
+        "value": "i0116",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "i0116",
+                "matches": 1
+            },
+            {
+                "strategy": "name",
+                "value": "loginfmt",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#i0116",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='i0116']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='lightbox']/div[3]/div/div/div/div[2]/div[2]/div/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Ingresar"
+    },
+    "Ingresar dato": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+        "strategy": "id",
+        "value": "i0116",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "i0116",
+                "matches": 1
+            },
+            {
+                "strategy": "name",
+                "value": "loginfmt",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#i0116",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='i0116']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='lightbox']/div[3]/div/div/div/div[2]/div[2]/div/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Ingresar dato"
+    },
+    "Boton": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+        "strategy": "id",
+        "value": "idSIButton9",
+        "element": {
+            "tag": "INPUT",
+            "type": "submit",
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "idSIButton9",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#idSIButton9",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='idSIButton9']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='lightbox']/div[3]/div/div/div/div[4]/div/div/div/div/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[4]/div/div/div/div/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGwAAAAgCAYAAAD3/J3aAAAAAXNSR0IArs4c6QAAAx9JREFUaEPtmE9I1EEUx5+x5EaFmgZqiQSW1uLJoIOVkEFB1K2gg0EUSHQRL50qSggiCC/RpQjyUNStLgYZRVgYdootLaPCSqH8R0aLLBVv4A2zr2lZlt+Mv4czp/39mTdvvp/33rzflkBn/x8IQ4wCJQGYGFbK0QBMFq8ATBivACwAk6aAMH/DGRaACVNAmLshwwIwYQoIc9dLhqXPtsKWmlVamtcT85A6Nwgd22rhyuHNMD6TUddRDBc2o/ArKhtOge1qXAM3jzbD3K+sBoL3eg5shNP33sGj0emo9uHUzrWOFOxNVcGRG68W3WenwM7vb4Cu9nroHfgEZ+6PORXVpfElA4zK052Xk3C8L/2PppSBI5M/YXfvsHpO99aVJ9X1s/ezUF+ZhP70d2XjYddWaKpemRPtpqA4B7M6n80vsxk9H+ceaqkG9BH9XZ5YBj8yWTh56w30DX2F/5VzXMd8Zs5xGTxOMwwdR4HbmyphYGRKQ6ENcWC2Ekrzrw9+LgqYLShQaBx4biKwY63rgSAScLOM2zLMtEH75IHkApxzYOg0lsZTezao6CXhzWyibKBop+g23yk2w2xioz8n2uqg++4otG2qUJl18cEHXbb5HH5tzscsxIE2Lh9shKtPxp2Wfy/AKNIomqlL5NFvK3f0TrHAKEN5tC9kfytIteWlqiSaQcIDxwYQs9I2zIAUm2Gm42Yj8vjtdM55g+LWlJXmtPhRAMtXqmxZXQgwDtkFHJtNrxnGSwcHZhOPNy62EmdmJm86bDZNIYoBtpjdr1NguLF9zWuh5cJzrVE+cQnOi49zukGhToxKDZ2HeHZg10jX3+YXVOfHgdkaGVync2cdbL80pJqOQkoifwf9KluR0N2mr+9Lp8AIwOpkQgMzW2pbB8fn3B6egB0NFbqtNztP/I32no7NqHdswCir8R8V8oPOL/w2LASY+anBz1/6/MB1XJ9fuIZTYFHUdV/dVxS++rARe2C89PgQJc5rxAqYrYRSCYqziD59ixUwnxuXulYAJoxcABaACVNAmLshwwIwYQoIczdkWAAmTAFh7v4FrcTL/98gUv4AAAAASUVORK5CYII=",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Boton"
+    },
+    "Ingresar clave": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+        "strategy": "id",
+        "value": "i0118",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "i0118",
+                "matches": 1
+            },
+            {
+                "strategy": "name",
+                "value": "passwd",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#i0118",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='i0118']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='lightbox']/div[3]/div/div[2]/div/div[3]/div/div[2]/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[2]/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVwAAAAkCAYAAADFEII0AAAAAXNSR0IArs4c6QAABG9JREFUeF7tnDFoFEEUQGeSzRZiaYrLBa9Pq4KFqG1ABTsrLQSRYGdhUtgoYizsNGhhoVjYCSqkFK0stBWs5EL2rkgrFnvLjswyc84tu7cxbMaQeekutzt//pvNu79/5yIFPxCAAAQg4IWA9BKFIBCAAAQgIBAuFwEEIAABTwQQrifQhIEABCCAcLkGIAABCHgigHA9gSYMBCAAAYTLNQABCEDAEwGE6wk0YSAAAQggXK4BCEAAAp4IIFxPoAkDAQhAAOFyDUAAAhDwRADhegJNGAhAAAITwl1YWLgopXznYlFKXRoMBu8PE6rFxcU7Sql1KeXq7OzsqyzLVpIkuXuYciQXCEDg4BEYC7fb7b4UQpyPouh0v98f6ql2Op0TMzMzp5IkedbG1Ofn54/GcfxBKfX4f0nczGE1TdP1OI6fCiGuHsYPlTbWizEgAIF2CRTCNRXfcpqmF3Z2dn61G+LvaAdBuPuVG+NCAAIQaCIge71eJ8uyL0qpW01Vp6l4PwshjpiBP1lJW5lKKTeVUku6ctTH6Nv27e3tRxXn/s7z/GwcxwMdXwjxUAixps/RVfZoNDrptjfsOPp9G0sIca5uHlXv2VyllGtKqRv2GLfCrRh7y636m4DyPgQgAIE6AtKI8EUURcu2lVB1sOnvvtGSHA6H3/Qxpg3R09LVr3W7QEvMCqx8TlWFayVoRWvn0O1270dRtKFfmzm+zfP8so5t4ookSa6ZedxM0/S1nYOWvpa8M8fiWCfWMZuHqe5XrFTLbZRyLC4lCEAAAnslII0Ub09rJ7jVqxWZDmgEtpnn+fUsy34Y4fatCMuCnSZcKeWGO7abUPk8LUEp5ffy8VW5uB8oekxdTbux3BzsB4kbezd89gqf8yAAgbAIWOE+mXbbXNd2cEU4Go0+auG61WVZ1NOEW25pVNzai1LlrHdTTNzu290HFUs40b5wY1XlVrFbY9w6CevyIFsIQKBNAralML5drxq8rgrcL+Hafq+U8p6uYusetjmCfaWr6qaHf1VyLf+uvFuDCrfNy42xIBA2gWKXQlOf8l9aCm1UuEacS3WtCXfJ3A8DKeWClLK2Wm8S7tzc3Ncsy4oWiW0vINyw/0DIHgJtEiiE6zxM+un2ct0HSFMemhUPpKqkXNdScKU85ZZ+LE5byeqWgmldFPto9RY294FaVR/ZjF98saFJuOW2SB2XNheAsSAAgXAITHzTzFS6xXYu8zPRI63obRa38vrY3QhXH+eMUdtXdapuO5cHQogz9gsTpXkW49iK1JHkcZPD+P0m4eptcaXta1tmu9qV/d6jHM4lR6YQCJcA/0sh3LUncwhAwDMBhOsZOOEgAIFwCSDccNeezCEAAc8EEK5n4ISDAATCJYBww117MocABDwTQLiegRMOAhAIlwDCDXftyRwCEPBMAOF6Bk44CEAgXAIIN9y1J3MIQMAzAYTrGTjhIACBcAkg3HDXnswhAAHPBBCuZ+CEgwAEwiWghfs83PTJHAIQgIA/An8Al1ew62+wuAAAAAAASUVORK5CYII=",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Ingresar clave"
+    },
+    "boton inciar": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+        "strategy": "id",
+        "value": "idSIButton9",
+        "element": {
+            "tag": "INPUT",
+            "type": "submit",
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "idSIButton9",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#idSIButton9",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='idSIButton9']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='lightbox']/div[3]/div/div[2]/div/div[5]/div/div/div/div/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[5]/div/div/div/div/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG4AAAAgCAYAAADzCU3nAAAAAXNSR0IArs4c6QAAA6FJREFUaEPtl19I1EEQx+fi4M7+qRnhWaKW5pX0UqGQhJBC9VBvCQUGURDViwgRBBXVUy/iS0RQBAkF9WYEBhpZGSQFRUlqRspFSqWmEZ5xeDEL82N+e3vHetzlb2Pv8Xczs9+dz+zsrA+Od8bB/szKgC9e5rPgzGIm1FpwBkKz4AyFZsFZcAZnwFDp9o6z4AzNgKGy7Ymz4AzNgKGy0z1x/RdqYWx6DhraXmntvKt5O+wsz4crjz7D+QfDSX2aaorg6sFNEJmKQtXFXq3Yi2GE+y/OD8Kpux+g/eVXlwT8LzfHD4dvvYPHg5PZkfevwGVHvfeiYoHiT7eg096BBZd26pSOLQ2l0No1ktmgqmiZALerchXcPrIFBsZ/Qyg3AJtDy8VS3QMTTuXdaKqCxm2FrtaC1VkfLnBk3ez9Anf6xpxYVLXoe7R2nWPH42KMcOEyGJ2Iwo4Nea41+X75Wn9i866Wja2NNP+KxpJq5H60Lm+HPA6ujfs51t4vZNAV8PD9d3FlrM0Liu/cZkG0MwkOxZAQTDaKpTtNBocbry7NdZJ0aV85rMzxQ8fbbwngnp+ugetPI+IuQbvm+hJo6x4VdyUB4TDlBMhrtzWGYWY2Jvwx2fij+5QDOVQdchUb9+N26I+FOz0bc+KgzjO7y4RmhEfgAv4lTk7kHCwaOC6cTmFn/w8hnCcPBbYeqIRrPZGEQYWfXtU9IcfV2TyuvadqdcKwgMk9UVcMLfcHnQEDE0zaivICSj/UnwowAUAb7EBYFASub2Ta6UJ8rVQDmxJoJk8ctkpKtgyAg6vbmJ/QNkmcChx9o/bCW4yqZckbpaStCPpdrUluwdwPO0fP0JSYcGU/GdzZvetFu5anSF4wqB1j3Xs9ntA++TftU7dY4FQnAEXL4KjlPBueEkWhOnGqpKkSQLHmYvOiRacqIO4v+2H74wWD4Ohkcb//DlzFmqWue4pvVgbH2w0HSy1Y58TJEOkN+uLTz6Q6VOD52zXdVmn0icOKlR+pyYYT1VCDkygNQTrgOk5uhTeRGXGfyoUh68D/L++vgHMdH6G5vjSpn85wwocoatfGg8OK5uMzjdpPhiYTpkpuh6ekpCAICzlxqZ4Tqe5PnWcI3WtyHPnJ4Rlw2peoNcxOBtIdTrKjxkbVzoAFp50qbxlacN7ioa3GgtNOlbcMLThv8dBWY8Fpp8pbhhact3hoq7HgtFPlLUMLzls8tNVYcNqp8pahL172F2AMqi4o5eGkAAAAAElFTkSuQmCC",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/saml2?SAMLRequest=fVJbb9sgFH7vr7B4x1ecJiiOlDWaFqnbrCbtw14qwMctkg0eB7fbvx92WjXV1PIGfHy3wxpF3w18O%2FpHcwO%2FR0Af%2Fek7g3y%2BqMjoDLcCNXIjekDuFT9sv1%2FzPE754Ky3ynYk2iKC89qaK2tw7MEdwD1pBbc31xV59H5AniRSmAC2vdSCOkQbWyN7FSvbJ9M2caBAP4F7BwwaDYl2wZc2YlJ44%2BvsgzZxr5WzaFtvTacNzHSyhJwx2VDFVjllq1LSpcxSushk27CyAJYXyRQwJ9FX6xTM%2BSvSig6BRPtdRe5TealYUzBaFmVKWcFWdAkypUoKBs1CKMlYgGItEIPrt8eII%2BwNemF8RfI0X9CU0XR5zFa8yHiexkH8F4nql%2FK%2BaNNo8%2FB50%2FIEQv7teKxp%2FfNwJNEdOJz7CACyuYjCWk%2BZ%2BOzAnY3xc27xOjuyOSv%2Bfir%2Bv0mskzOFM82B%2Fwi8%2B11tO63%2BRtuus89XDoQPvXg3wlxzL%2FzHTrI4m090Q9sZykeDAyjdamhIctK6OOm%2F%2F6%2Bbfw%3D%3D&RelayState=_0b7c4d34-5350-4349-8eb0-cba4ed6acb44&sso_reload=true",
+            "isMain": true,
+            "props": null
+        },
+        "name": "boton inciar"
+    },
+    "Ingrar codigo authe": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+        "strategy": "id",
+        "value": "idTxtBx_SAOTCC_OTC",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "idTxtBx_SAOTCC_OTC",
+                "matches": 1
+            },
+            {
+                "strategy": "name",
+                "value": "otc",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#idTxtBx_SAOTCC_OTC",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='idTxtBx_SAOTCC_OTC']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='idDiv_SAOTCC_OTC']/div/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[3]/div/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAWAAAAAkCAYAAAC33+CCAAAAAXNSR0IArs4c6QAAA8VJREFUeF7t3DFsEzEUxnH7dOqAWDOkrYhYWRESE7BWAiQ2WGBgQYitA91ZYGADBAMDXWBDAqSu0ImFlbVK1WuGjqBIiaIzOLKrV/dyibL4fP2zoJDLnf3z6evjnVOt+IMAAgggEEVAR7kqF0UAAQQQUAQwNwECCCAQSYAAjgTPZRFAAAECmHsAAQQQiCRAAEeC57IIIIAAAcw9gAACCEQSIIAjwXNZBBBAgADmHkAAAQQiCRDAkeC5LAIIIEAAcw8ggAACkQQI4EjwXBYBBBA4EcCrq6u3tNZfJIsx5vbh4eFX+W/dbvdylmW7xpi74Xsh6dra2get9e+Dg4MXvV6vO5lMfiqlvhdF8QB+BBBA4CwLHAewDcr/wXgjz/Or/X5/YFFc0F4piuKtR3Ih+jHP83v+uDpAGcBnGZq5I4AAAqHANIDX19efGmM2xuPxzaOjo791TDaAh8Phn3nH+XMQwNx0CCCAQLWA9m0BY8yTee0E33pQSp1zp/sRhrarpO+797ft374F0el0zq+srHzTWu/YloSosnfdOYdKqU2l1KM8zzd8hS1aFxfcefdlpc7iIoAAAikKaBeq72XgVU3E9Yc/lWV5bTAY/LLHuLDt+RAOX/uestZ6ywZuGMBhL9m/r5S66AO2qt/sKvbHhHCKtxxjRgABL6BdSG7WtR+qKld7AleZ7pRl+dC+zrLsc1mWd3xA+5CeVQG7wFbygVz4A6HqGD8eY8zLeVU7S40AAgg0VcAH8Ku6anJWm0IGoWs1nDqP7AHLIB+NRq/DdoRoSUwrcttrrjomDPam4jIuBBBAoE7AtyBOVa7yQ7LSldVtRQCfqqTnBXBYxcoK2AdwVaXLwz1ubAQQSF1gugui6r/5cmLLtiDCz4Wvq67rWiLHlTQtiNRvMcaPAAKzBKYBLHYZ7MlesNwHXPMQbtrDFQ/Q+r6n6x6WPZ/1EC48pxiHWuAh3ELb5lh6BBBAoKkCJ74JF2whs2M+sd2r4pty2/IBmgjh664nvGWMuVS3DS04577dDqe1fiZ3ZSyy/a2pwIwLAQQQqK2Am8SzyK6MJo2XsSCAAALLCjTql/H4FoTW+o3/osayE+NzCCCAQNMFogbwor/8p+mIjA8BBBBYRiBqAC8zYD6DAAIItEWAAG7LSjIPBBBIToAATm7JGDACCLRFgABuy0oyDwQQSE6AAE5uyRgwAgi0RYAAbstKMg8EEEhOgABObskYMAIItEWAAG7LSjIPBBBIToAATm7JGDACCLRFwAbwu7ZMhnkggAACKQn8A/8tP9wwEPjDAAAAAElFTkSuQmCC",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Ingrar codigo authe"
+    },
+    "Confirmar": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+        "strategy": "id",
+        "value": "idSubmit_SAOTCC_Continue",
+        "element": {
+            "tag": "INPUT",
+            "type": "submit",
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "idSubmit_SAOTCC_Continue",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#idSubmit_SAOTCC_Continue",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='idSubmit_SAOTCC_Continue']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='lightbox']/div[2]/div[2]/div/div[2]/div/div[6]/div/div/div/div[2]/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[2]/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGwAAAAgCAYAAAD3/J3aAAAAAXNSR0IArs4c6QAAA2tJREFUaEPtmE1IVFEUx48x2FTGiDbg9IFFltZQixKDXBQZ1MZ2RQUGURDpRtq0qqhWbcJNtCmihILa2cYgwwiJoiCIKTUhZMpxkU72QVMMFefCuZyu703vvjf43pU7G8fnPfedc37n/O+5VsCJ/j9gP8ZkoMICM4aVcNQCM4uXBWYYLwvMAjMtA4b5a88wC8ywDBjmru0wC8ywDBjmblk7rGPbcrhyaAMsjcdkGt7kvkH6/JBhaQHY1VgDt45uguHJ77C750Vk/C8bsGsdaTjWuhKuD32A470ZESAGfXHfOjjT9w4ejUxHJmgvjsxrYBfaG6C7rR56Bsbh7P0xL/mI/Jp5DSxzrlUA+J/0qZL5tVCErjtvoffZhLB/2N0MTXVLYHyqANvXVotnA8NTcPPphJTaX8XfcOnBe1kYZPNkLA8Hm1PChu9Licc962vjkKyqlPZYaKf3rIHK2AJh9/FzAY7ceC3UgANLJRbCxlSVWKNKvLoH/zuqzoGtdTA4mof2zclZtn6qNrAkUmD9mU9SCp0cocAQDkkmJrtldUJCw9/bmmoFJDw3SGY5JCyOxKKYTCzZ8ETxfRECnkUcFPqHe2MBcfh8b1yDdiuq41LmKdaZH0VZnH2dW+BV9osoICrIuy8nRYzkfznP8cDA0MnL+xvh6uNsSTl06kIVNnWLU5XTwY/gT+5YBafujYjOVKFjonnibj/PicTzJLvJHY9lcHR6lh2Bxq7hysALFOPMzfyUBacWhZ+u4jZlAYaTIVWVk0OlzgMeoBsw3r1OwFBGCTINOwgJ7QgYn/bUTiCfeQE52eE69f34DGMgySQZJ4UoBdcPvMDAvBzOpWQzLGBOqqALDBOOxZrNF6REqh0WOWBeZIKqUB1MvEqiboc5SRvvMB1JVO9heC7tTS8THX24JSW/07XFCGAEpCG5+J9DnN/Ddq6vEROZOnRwOfMriXxQUYvDDY7b0EFFRXZ8WFGlVL3O0JDBh6ZIdhhpMTnMtZlfpEuN0WjjF5h6FXAbz9X/WKj+8mlOvQ7gtMjPJ4qRplQa+fEnHzoiDczPIRrURoUcdL+o2wceOsIO0AILm4Dm+y0wzYTZ5XObAeMlcW7TFf7bLLDwGWh5YIFppSv8xRZY+Ay0PLDAtNIV/mILLHwGWh5YYFrpCn/xX1YYSg76EoMoAAAAAElFTkSuQmCC",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Confirmar"
+    },
+    "boton Confirmar": {
+        "type": "browser",
+        "source": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+        "strategy": "id",
+        "value": "idSubmit_SAOTCC_Continue",
+        "element": {
+            "tag": "INPUT",
+            "type": "submit",
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "idSubmit_SAOTCC_Continue",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#idSubmit_SAOTCC_Continue",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='idSubmit_SAOTCC_Continue']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='lightbox']/div[2]/div[2]/div/div[2]/div/div[6]/div/div/div/div[2]/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[2]/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGwAAAAgCAYAAAD3/J3aAAAAAXNSR0IArs4c6QAAA2tJREFUaEPtmE1IVFEUx48x2FTGiDbg9IFFltZQixKDXBQZ1MZ2RQUGURDpRtq0qqhWbcJNtCmihILa2cYgwwiJoiCIKTUhZMpxkU72QVMMFefCuZyu703vvjf43pU7G8fnPfedc37n/O+5VsCJ/j9gP8ZkoMICM4aVcNQCM4uXBWYYLwvMAjMtA4b5a88wC8ywDBjmru0wC8ywDBjmblk7rGPbcrhyaAMsjcdkGt7kvkH6/JBhaQHY1VgDt45uguHJ77C750Vk/C8bsGsdaTjWuhKuD32A470ZESAGfXHfOjjT9w4ejUxHJmgvjsxrYBfaG6C7rR56Bsbh7P0xL/mI/Jp5DSxzrlUA+J/0qZL5tVCErjtvoffZhLB/2N0MTXVLYHyqANvXVotnA8NTcPPphJTaX8XfcOnBe1kYZPNkLA8Hm1PChu9Licc962vjkKyqlPZYaKf3rIHK2AJh9/FzAY7ceC3UgANLJRbCxlSVWKNKvLoH/zuqzoGtdTA4mof2zclZtn6qNrAkUmD9mU9SCp0cocAQDkkmJrtldUJCw9/bmmoFJDw3SGY5JCyOxKKYTCzZ8ETxfRECnkUcFPqHe2MBcfh8b1yDdiuq41LmKdaZH0VZnH2dW+BV9osoICrIuy8nRYzkfznP8cDA0MnL+xvh6uNsSTl06kIVNnWLU5XTwY/gT+5YBafujYjOVKFjonnibj/PicTzJLvJHY9lcHR6lh2Bxq7hysALFOPMzfyUBacWhZ+u4jZlAYaTIVWVk0OlzgMeoBsw3r1OwFBGCTINOwgJ7QgYn/bUTiCfeQE52eE69f34DGMgySQZJ4UoBdcPvMDAvBzOpWQzLGBOqqALDBOOxZrNF6REqh0WOWBeZIKqUB1MvEqiboc5SRvvMB1JVO9heC7tTS8THX24JSW/07XFCGAEpCG5+J9DnN/Ddq6vEROZOnRwOfMriXxQUYvDDY7b0EFFRXZ8WFGlVL3O0JDBh6ZIdhhpMTnMtZlfpEuN0WjjF5h6FXAbz9X/WKj+8mlOvQ7gtMjPJ4qRplQa+fEnHzoiDczPIRrURoUcdL+o2wceOsIO0AILm4Dm+y0wzYTZ5XObAeMlcW7TFf7bLLDwGWh5YIFppSv8xRZY+Ay0PLDAtNIV/mILLHwGWh5YYFrpCn/xX1YYSg76EoMoAAAAAElFTkSuQmCC",
+        "frame": {
+            "name": "",
+            "title": "Iniciar sesi\u00f3n en la cuenta",
+            "url": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+            "sourceURL": "https://login.microsoftonline.com/b5e244bd-c492-495b-8b10-61bfd453e423/login",
+            "isMain": true,
+            "props": null
+        },
+        "name": "boton Confirmar"
+    }
+}
