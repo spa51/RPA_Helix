@@ -1,5 +1,6 @@
 from robocorp.tasks import task
 from robocorp import browser
+import os
 import tkinter as tk
 from tkinter import simpledialog
 
@@ -14,21 +15,36 @@ def get_input_popup(prompt_text, is_password=False):
     root.destroy()
     return result
 
+def validar_items(page):
+    print("=== Validando existencia de items en la tabla ===")
+    try:
+        # Esperamos a que aparezca la tabla vacía o la tabla con datos
+        page.wait_for_selector(".tc__list-placeholder-text, .ngViewport", state="visible", timeout=30000)
+        
+        # Validamos cuál elemento cargó
+        if page.locator(".tc__list-placeholder-text").is_visible():
+            print("no hay items")
+        elif page.locator(".ngViewport").is_visible():
+            print("hay items")
+        else:
+            # Por si algo raro pasó con el DOM
+            print("no se pudo determinar el estado de la tabla")
+            
+    except Exception as e:
+        print(f"Aviso: Timeout al esperar la tabla. Detalle: {str(e)[:50]}")
+
 @task
 def login_smartit():
     print("--- Inicio de Sesión Smart IT ---")
-    # Usamos popups porque la extensión de Sema4ai/Robocorp bloquea la consola (EOFError)
-    email = get_input_popup("Por favor ingrese su correo electrónico:")
-    password = get_input_popup("Por favor ingrese su contraseña:", is_password=True)
-
-    if not email or not password:
-        print("Credenciales canceladas por el usuario.")
-        return
+    # Credenciales por defecto
+    email = "spinerez@bancolombia.com.co"
+    password = "D4taf1l3$M3d26#"
 
     # Configurar el navegador
     browser.configure(
         browser_engine="chromium",
         headless=False, # Necesitamos ver el navegador
+        isolated=True,  # Modo Incógnito / Contexto limpio
     )
     
     print("Abriendo el navegador...")
@@ -78,8 +94,12 @@ def login_smartit():
     print("Esperando a que cargue completamente la consola de Smart IT...")
     page.wait_for_timeout(10000) 
     
+    # 6. Validar existencia de ítems
+    validar_items(page)
+    
     # Tomar captura de pantalla
-    page.screenshot(path="output/smartit_login.png")
-    print("Captura de pantalla guardada en 'output/smartit_login.png'")
+    os.makedirs("output/img", exist_ok=True)
+    page.screenshot(path="output/img/smartit_login.png")
+    print("Captura de pantalla guardada en 'output/img/smartit_login.png'")
     print("--- Fin de la prueba de RPA ---")
 
