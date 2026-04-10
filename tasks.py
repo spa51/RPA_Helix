@@ -25,13 +25,25 @@ def validar_items(page):
         if page.locator(".tc__list-placeholder-text").is_visible():
             print("no hay items")
         elif page.locator(".ngViewport").is_visible():
-            print("hay items")
+            contar_items(page)
         else:
             # Por si algo raro pasó con el DOM
             print("no se pudo determinar el estado de la tabla")
             
     except Exception as e:
         print(f"Aviso: Timeout al esperar la tabla. Detalle: {str(e)[:50]}")
+
+def contar_items(page):
+                # Contar items iterando por fila
+            count = 0
+            while True:
+                selector = f".ng-scope:nth-child({count + 1}) > .col2 .ngCellText"
+                if page.locator(selector).count() > 0:
+                    count += 1
+                else:
+                    break
+            print(f"hay items: {count} item(s) encontrado(s)")
+    
 
 @task
 def login_smartit():
@@ -44,7 +56,7 @@ def login_smartit():
     browser.configure(
         browser_engine="chromium",
         headless=False, # Necesitamos ver el navegador
-        isolated=True,  # Modo Incógnito / Contexto limpio
+        isolated=False,  # Modo Incógnito / Contexto limpio
     )
     
     print("Abriendo el navegador...")
@@ -83,7 +95,16 @@ def login_smartit():
         except Exception as e:
             print(f"Aviso: Ocurrió un error al intentar ingresar el código. Detalle: {str(e)[:50]}")
     
-    # 4. Confirmar "¿Mantener la sesión iniciada?"
+    # 4. Seleccionar cuenta si aparece el picker de cuentas de Microsoft (Falta verificar aveces aparece esta  raro)
+    try:
+        account_tile_selector = f"div[data-test-id='{email}']"
+        page.wait_for_selector(account_tile_selector, state="visible", timeout=5000)
+        print("Selector de cuenta detectado, haciendo click...")
+        page.locator(account_tile_selector).click()
+    except Exception:
+        pass  # No apareció el selector de cuenta, se continúa normalmente
+
+    # 5. Confirmar "¿Mantener la sesión iniciada?"
     try:
         page.wait_for_selector("#idBtn_Back", state="visible", timeout=5000)
         page.locator("#idBtn_Back").click()
