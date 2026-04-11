@@ -34,15 +34,93 @@ def validar_items(page):
         print(f"Aviso: Timeout al esperar la tabla. Detalle: {str(e)[:50]}")
 
 def contar_items(page):
-                # Contar items iterando por fila
-            count = 0
-            while True:
-                selector = f".ng-scope:nth-child({count + 1}) > .col2 .ngCellText"
-                if page.locator(selector).count() > 0:
-                    count += 1
-                else:
-                    break
-            print(f"hay items: {count} item(s) encontrado(s)")
+    # Contar items iterando por fila
+    count = 0
+    while True:
+        selector = f".ng-scope:nth-child({count + 1}) > .col2 .ngCellText"
+        if page.locator(selector).count() > 0:
+            count += 1
+        else:
+            break
+    print(f"hay items: {count} item(s) encontrado(s)")
+
+    # Obtener detalle de todos los ítems encontrados
+    for i in range(1, count + 1):
+        obtener_detalle_item(page, item_index=i)
+        
+        # Si no es el último ítem, volver a la consola de tickets para poder abrir el siguiente
+        if i < count:
+            print("Regresando a la consola de tickets...")
+            page.go_back()
+            # Esperar a que recargue la tabla original antes de buscar el siguiente
+            page.wait_for_selector(".tc__list-placeholder-text, .ngViewport", state="visible", timeout=30000)
+            page.wait_for_timeout(2000) # Pausa mínima para estabilizar la tabla
+
+
+def obtener_detalle_item(page, item_index=1):
+    """
+    Hace clic en el ítem de la lista, entra al iframe (#pwa-frame) 
+    y extrae el valor específico de 'No. Cédula:'.
+    """
+    print(f"\n=== Extrayendo detalle del ítem #{item_index} ===")
+    try:
+        # 1. Hacer clic en la fila para entrar al ítem
+        fila_selector = f".ng-scope:nth-child({item_index}) > .col2 .ngCellText"
+        page.locator(fila_selector).first.click()
+        print("Clic realizado, entrando a la vista del ticket...")
+
+        # 2. Entrar al iframe que contiene la vista progresiva de Helix
+        # Hemos quitado las pausas largas! Dejamos que Playwright detecte el iframe rápido.
+        frame = page.frame_locator("#pwa-frame")
+        
+        # 3. Esperar y ubicar el cuadro de texto exacto
+        cuadro_datos = frame.locator("#ar1000000151_data")
+        # El programa avanzará en el instante microscópico en que detecte que el texto existe
+        cuadro_datos.first.wait_for(state="attached", timeout=20000)
+        
+        # Extraemos el texto completo (del atributo title que contiene la data estructurada)
+        texto = cuadro_datos.first.get_attribute("title")
+        if not texto:  # Respaldo por si acaso
+            texto = cuadro_datos.first.inner_text()
+
+        # 4. Aislar todos los campos solicitados
+        campos_buscados = [
+            "No. Cédula:",
+            "Tipo solicitud:",
+            "Usuario de Datasoft:",
+            "Información del servicio:",
+            "Usuario de referencia DATASOFT:",
+            "Línea de Negocio:"
+        ]
+        
+        datos_extraidos = {}
+        
+        for linea in texto.splitlines():
+            for campo in campos_buscados:
+                if campo in linea:
+                    partes = linea.split(campo)
+                    if len(partes) > 1:
+                        # Guardamos el valor limpio sin los dos puntos
+                        nombre_amigable = campo.replace(":", "").strip()
+                        datos_extraidos[nombre_amigable] = partes[1].strip()
+                        break
+
+        # 5. Imprimir el resultado sin caracteres especiales/emojis
+        print("\n=================================")
+        if datos_extraidos:
+            print("DATOS EXTRAIDOS DEL ITEM:")
+            # Se imprime sin acentos extraños en los prints para cuidar que la consola de Windows no falle
+            for clave, valor in datos_extraidos.items():
+                # Reemplazamos acentos en las llaves solo para la impresion segura en CMD
+                clave_segura = clave.replace('é', 'e').replace('í', 'i')
+                print(f"  {clave_segura}: {valor}")
+        else:
+            print("Fallo: No se vio ningun texto de los solicitados.")
+            print("Texto extraido para depurar:\n", texto)
+        print("=================================\n")
+
+    except Exception as e:
+        print(f"Error al extraer los datos: {str(e)[:150]}")
     
 
 @task
