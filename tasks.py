@@ -105,6 +105,26 @@ def obtener_detalle_item(page, item_index=1):
                         datos_extraidos[nombre_amigable] = partes[1].strip()
                         break
 
+        # Extraer Nombre Completo
+        try:
+            nombre_loc = frame.locator("#ar301395400_data")
+            if nombre_loc.count() == 0:
+                nombre_loc = page.locator("#ar301395400_data")
+            if nombre_loc.count() > 0:
+                datos_extraidos["Nombre Completo"] = nombre_loc.first.inner_text().strip()
+        except Exception as e:
+            print(f"Aviso: No se pudo extraer Nombre Completo {e}")
+
+        # Extraer Correo
+        try:
+            correo_loc = frame.locator("#ar1000000048_data")
+            if correo_loc.count() == 0:
+                correo_loc = page.locator("#ar1000000048_data")
+            if correo_loc.count() > 0:
+                datos_extraidos["Correo"] = correo_loc.first.inner_text().strip()
+        except Exception as e:
+            print(f"Aviso: No se pudo extraer Correo {e}")
+
         # 5. Imprimir el resultado sin caracteres especiales/emojis
         print("\n=================================")
         if datos_extraidos:
@@ -133,7 +153,7 @@ def login_smartit():
     # Configurar el navegador
     browser.configure(
         browser_engine="chromium",
-        headless=False, # Necesitamos ver el navegador
+        headless=True, # Necesitamos ver el navegador
         isolated=False,  # Modo Incógnito / Contexto limpio
     )
     
