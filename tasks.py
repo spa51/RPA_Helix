@@ -3,6 +3,22 @@ from robocorp import browser
 import os
 import tkinter as tk
 from tkinter import simpledialog
+import oracledb
+
+def conectar_bd():
+    print("\n=== Conectando a Base de Datos Oracle ===")
+    try:
+        dsn = oracledb.makedsn("172.16.14.17", 1521, service_name="ORCL")
+        conn = oracledb.connect(
+            user="datasoft",
+            password="data2001",
+            dsn=dsn
+        )
+        print("Conexión exitosa a la base de datos Oracle.")
+        return conn
+    except Exception as e:
+        print(f"Error al conectar a la base de datos: {e}")
+        return None
 
 def get_input_popup(prompt_text, is_password=False):
     root = tk.Tk()
