@@ -4,21 +4,83 @@ import os
 import tkinter as tk
 from tkinter import simpledialog
 import oracledb
+import subprocess
+import tempfile
 
 def conectar_bd():
-    print("\n=== Conectando a Base de Datos Oracle ===")
+    print("\n=== Conectando a Base de Datos Oracle (Modo Grueso) ===")
     try:
-        dsn = oracledb.makedsn("172.16.14.17", 1521, service_name="ORCL")
+        oracledb.init_oracle_client(lib_dir=r"C:\oracle\instantclient_23_0")
         conn = oracledb.connect(
             user="datasoft",
             password="data2001",
-            dsn=dsn
+            dsn="172.16.14.17:1521/ORCL"
         )
-        print("Conexión exitosa a la base de datos Oracle.")
+        print("Conexión exitosa a la BD.")
         return conn
     except Exception as e:
-        print(f"Error al conectar a la base de datos: {e}")
+        print(f"Error al conectar a BD: {e}")
         return None
+
+def ejecutar_consulta_db(query, conn):
+    if not conn:
+        print("Aviso: No hay conexión a BD para ejecutar la consulta.")
+        return "0"
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(query)
+            res = cursor.fetchone()
+            if res:
+                return str(res[0])
+            return "0"
+    except Exception as e:
+        print(f"Error ejecutando consulta en BD: {e}")
+        return "0"
+
+def validar_datos_condicionales(datos_extraidos, conn):
+    print("\n--- Validando en Base de Datos vía Terminal ---")
+
+    info_servicio = datos_extraidos.get("Información del servicio", "").lower()
+    tipo_solicitud = datos_extraidos.get("Tipo solicitud", "")
+    usuario_datasoft = datos_extraidos.get("Usuario de Datasoft", "")
+    cedula = datos_extraidos.get("No. Cédula", "")
+
+    if "masivo" in info_servicio:
+        print("(Solicitud masivo omitida)")
+        return
+
+    try:
+        if tipo_solicitud == "Activación/desbloqueo":
+            print(f"Validando existencia de '{usuario_datasoft}' o '{cedula}'...")
+            existe = False
+            
+            if usuario_datasoft:
+                res = ejecutar_consulta_db(f"SELECT COUNT(*) FROM a_usuario WHERE LOGIN = '{usuario_datasoft}'", conn)
+                if res and res.strip() != "0":
+                    existe = True
+            
+            if not existe and cedula:
+                res = ejecutar_consulta_db(f"SELECT COUNT(*) FROM a_usuario WHERE NO_IDENTIFICACION = '{cedula}'", conn)
+                if res and res.strip() != "0":
+                    existe = True
+                    
+            if existe:
+                print("existe")
+            else:
+                print("no existe")
+                
+        elif "Creación" in tipo_solicitud or "Creacion" in tipo_solicitud:
+            print(f"Validando creacion de '{cedula}'...")
+            if cedula:
+                res = ejecutar_consulta_db(f"SELECT COUNT(*) FROM a_usuario WHERE NO_IDENTIFICACION = '{cedula}'", conn)
+                if res and res.strip() != "0":
+                    print("existe")
+                else:
+                    print("no existe")
+            else:
+                print("no existe") # Si no hay cédula, asumimos que no existe
+    except Exception as e:
+        print(f"Error en la consulta: {e}")
 
 def get_input_popup(prompt_text, is_password=False):
     root = tk.Tk()
@@ -31,7 +93,7 @@ def get_input_popup(prompt_text, is_password=False):
     root.destroy()
     return result
 
-def validar_items(page):
+def validar_items(page, conn=None):
     print("=== Validando existencia de items en la tabla ===")
     try:
         # Esperamos a que aparezca la tabla vacía o la tabla con datos
@@ -41,7 +103,7 @@ def validar_items(page):
         if page.locator(".tc__list-placeholder-text").is_visible():
             print("no hay items")
         elif page.locator(".ngViewport").is_visible():
-            contar_items(page)
+            contar_items(page, conn)
         else:
             # Por si algo raro pasó con el DOM
             print("no se pudo determinar el estado de la tabla")
@@ -49,7 +111,7 @@ def validar_items(page):
     except Exception as e:
         print(f"Aviso: Timeout al esperar la tabla. Detalle: {str(e)[:50]}")
 
-def contar_items(page):
+def contar_items(page, conn=None):
     # Contar items iterando por fila
     count = 0
     while True:
@@ -62,7 +124,7 @@ def contar_items(page):
 
     # Obtener detalle de todos los ítems encontrados
     for i in range(1, count + 1):
-        obtener_detalle_item(page, item_index=i)
+        obtener_detalle_item(page, item_index=i, conn=conn)
         
         # Si no es el último ítem, volver a la consola de tickets para poder abrir el siguiente
         if i < count:
@@ -73,7 +135,7 @@ def contar_items(page):
             page.wait_for_timeout(2000) # Pausa mínima para estabilizar la tabla
 
 
-def obtener_detalle_item(page, item_index=1):
+def obtener_detalle_item(page, item_index=1, conn=None):
     """
     Hace clic en el ítem de la lista, entra al iframe (#pwa-frame) 
     y extrae el valor específico de 'No. Cédula:'.
@@ -150,6 +212,8 @@ def obtener_detalle_item(page, item_index=1):
                 # Reemplazamos acentos en las llaves solo para la impresion segura en CMD
                 clave_segura = clave.replace('é', 'e').replace('í', 'i')
                 print(f"  {clave_segura}: {valor}")
+                
+            validar_datos_condicionales(datos_extraidos, conn)
         else:
             print("Fallo: No se vio ningun texto de los solicitados.")
             print("Texto extraido para depurar:\n", texto)
@@ -229,8 +293,19 @@ def login_smartit():
     print("Esperando a que cargue completamente la consola de Smart IT...")
     page.wait_for_timeout(10000) 
     
+    # 5.5 Conectar a la base de datos Oracle
+    conn = conectar_bd()
+    
     # 6. Validar existencia de ítems
-    validar_items(page)
+    validar_items(page, conn)
+    
+    # Cerrar conexion a BD al finalizar
+    if conn:
+        try:
+            conn.close()
+            print("Conexión a BD finalizada.")
+        except Exception:
+            pass
     
     # Tomar captura de pantalla
     os.makedirs("output/img", exist_ok=True)
