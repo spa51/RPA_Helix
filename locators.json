@@ -549,5 +549,796 @@
         "strategy": "css",
         "type": "browser",
         "value": ".dropdown-menu > .ng-scope > .dropdown-item_selected"
+    },
+    "Menu Soporte": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/central.php",
+        "strategy": "link",
+        "value": "Soporte",
+        "element": {
+            "tag": "A",
+            "type": "a",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "link",
+                "value": "Soporte",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": ".dropdown:nth-child(2) > .nav-link",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:link-text",
+                "value": "//a[contains(text(),'Soporte')]",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//ul[@id='menu_82163321']/li[2]/a",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//li[2]/a",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//a[contains(.,'Soporte')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Interfaz est\u00e1ndar - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/central.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/central.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Menu Soporte"
+    },
+    "Crear Ticket": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/central.php",
+        "strategy": "css",
+        "value": ".show .dropdown-menu-column:nth-child(1) > .dropdown-item:nth-child(2) > .text-wrap",
+        "element": {
+            "tag": "SPAN",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": ".show .dropdown-menu-column:nth-child(1) > .dropdown-item:nth-child(2) > .text-wrap",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//ul[@id='menu_82163321']/li[2]/div/div/div/a[2]/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//li[2]/div/div/div/a[2]/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//span[contains(.,'Crear caso')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAAAUCAYAAAAuoXvLAAAAAXNSR0IArs4c6QAABMtJREFUWEftl1uoVGUUx39rz5m9z957pheNApOQE9IFTAqjKCukNLGOT918iC4PqYkHDx2VTogeTCKjVI5XKqLALl4yoYQISVKMeigMrTS1IrpCpTN7z8yeM3vlN5fTOOrMSZ+EmZcN8+1v/df3X//1/9YW2r+mDEibn+YMtAlqoZA2QW2CLsxETlNQplC4VkoyVaArRvflXfuDS0UyFwZxce8eJiiTizaK8gjQARQAD/R3Een3Xfu1i/uY5599maBMUHhORHoU+ShBcb7neT9ns8VpWLoK8FXk0bSb3H3+MBfvTgmCaBLCW8BvoZucXt9S2VxhFiprVNiSdu05mbC4XVRPIDIKuFGEtb6bXBHkoidUeRIYBxwXYaPv2q8aWv5UTbu54jJgOjBK4LsYXZP2nC3l4pwjZiOlF4JRLrbEvYjcIPCPojtSntNXw2gWW4Jc9LgqK1V1fdp3nm1W62wQHUQYA/yK8rmg27Gs61Hti+Frge8RJhJzpQr9ac8ezIbFnaBTEd0tKkeBexScmirPFtP3nffr8whyxSWquhDhGMpXwDUo40eCkVANY9gMmG7ZpkiXqE5RdDDtO/0mdn3+ClcJTFDVF9O+s1QyQWFAROYg9KZc+81WBIngxAntTjvOoao69giENfXV/gOyKc++vaJC6/KUl3ypophonsAyEVntu8kBQ1B9zEb8unjk3OQdRuEn8/nxlsoqUTnme/a8ZhiKHkd5WVU31ASQCaP5lrI/9JLfuvnifpSoFtvgebniLoXRsRV31wiaK8LCVmZcrjaQ8u3rzDMI8vepyCaQI8APdYebJNBRsuIZl3R2Hs7kilNEtRu0S5CrFcZUK7SkMeYZrVXFEGSbIeNcBTwXRkLkw6qCRoPuqfjs0HvGZyv5W6+osCPt2sYiyr8gjAYVHlR0rtR8Bng95dlP1ydg2OzMRVMR629j0o2Hqe4dFPhLITgteeWPhCXLS3H8DCJTFH6y4BfzLLeZ6tq077QkqFl+wx4XRlubYYRhdHMMcwVuURhrOBClXy09icoqVd1Uby+ZoLBcRGYjLJCKXK2tgKWWPmBap3ZQI8VTjbsUdFPKcxY3EnQyV5xsqelv3Zfy7Icaq5sJC/cLsk6Frcbk61psQLXsAS0JMpeICu8iejDlOvcOVzkYmhFbmkPjUa0wwjC8InDdE6Y9zaxnlWSnwglRZpvYihxIe8mZtdjZMHob5NZYmFW+5oMgMi+uAH600IHAtT/28kM9qtqDqXpCHzbEna0dsmH0DnC3wtK0Z68JgsJMFWsQ1W/UkudFeUPgs9DteKwzisZKSTYAN6nqCyMhyOTXiJENi4tBF6lgDrKlGYbZL0gPohtSnrOokh/rQQ6lPPuuxtj/iUL2prxk9/CgmA2LvRD3gVxWdfwS8KWK9KXd5CflRBs8qKwIM30PyWqEO4G4OmgeFrV6fb9jV90AahmVQvkWGqeq60ZKUHXCXwtMBk7VonwjfaoJfcoUrhlG3rNXurloM8g0YAhwgCOi1oJyfqfnX+GzLvYZH6tG0rFoV4LSXmNkzW61+rUyUMxEieWI79tf1K8ZiZdI3GapHG1cG2n8WjEoMYEEB+qtwKy1wmiWX7PY7a/5FhVqE9Qm6P808Znv/gseHBTkuKoXiQAAAABJRU5ErkJggg==",
+        "frame": {
+            "name": "",
+            "title": "Interfaz est\u00e1ndar - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/central.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/central.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Crear Ticket"
+    },
+    "Crear ticket": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "link",
+        "value": "Crear caso",
+        "element": {
+            "tag": "A",
+            "type": "a",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "link",
+                "value": "Crear caso",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": ".show .dropdown-menu-column:nth-child(1) > .dropdown-item:nth-child(2)",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:link-text",
+                "value": "//a[contains(text(),'Crear caso')]",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//ul[@id='menu_1747264000']/li[2]/div/div/div/a[2]",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:href",
+                "value": "//a[contains(@href, '/Mesa_Servicios_Tecnologicos/front/ticket.form.php')]",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//li[2]/div/div/div/a[2]",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//a[contains(.,'Crear caso')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPAAAAAkCAYAAAC3+rerAAAAAXNSR0IArs4c6QAABqlJREFUeF7tnGuoVFUUx//rzJ0znnNmIjDLqAgxpAwseio9kbLEsk89P0SPD5lFkmRJRpk9iIoyuZZKRVT00syEikIkUdHqQ1H0tDfRy146c87cOXPn/HPPI8dJZ86lCYY5a+Ayw8yetdb+rf0/a+19DyMAFu76azyaXze9rS+VgBLoRQKiAu7FtGhMSiAeARVwPE46Sgn0JAEVcE+mRYNSAvEIqIDjcdJRSqAnCaiAezItGpQSiEdABRyPk45SAj1JQAXck2nRoJRAPAIq4HicdJQS6EkCKuCeTIsGpQTiEVABx+Oko5RATxJQAfdkWjQoJRCPQKIFvPV3TpQKRp98oGyMh0tHKYHeIpBsAf8avQnyBBHOOvnAgZXdTE2+VJooFZkmwPgI3Dzk2K+NEcl304faUgKJFvCW7dE6IU8Ced3kgwae6dZyyBfD5UJcDmAAQAmAC/AXEVngOfaT3fKjdpSACrjLAs77pXtEZA4hb6VQvsF13R8KhfI5sLgYgEeRK3JOer0uPSXQDQIq4C4K2PfDEyF4HsDPgZOe3twyF4qly0BZQsHKnGNfmw/Kq4XcAZHRAI4XwVLPSd/rF8OrSVwDYByAb0Sw3HPsJ0yyt5M5p1i+E8B0AKMF+DwCl+TcTLX935fN1oXyX3xUL0YSzYXIcQL8RXBN1s3Ma/hoZ7sbC1Zt7ElABdxNARfDq0g8QPKxnJe5rd1iK/jhxxAcAuAnEO8KuBqWdQzIeRHwkQBfQnAsIhxOwYKcaw8WgvJagNMgXC+UrwCcSyDTqOp7s+l5mVeb4/CL5dtJ3gzB1yA+AHAUiAlxfKTIIAKeA2DWzcuEjBdyKsHBnJdZYGw3x0/gCAEmkXww52X0xyL+h6tPIgT8znZOIKM11cUa71Gg4I4pY1IPxRteG5X3S4tE5FoI5mYdu+2e2ohNBJkoxZm5TOaTenXdIEDQqN6N9wAUsq59eq2KW2OzbroaVz4IrxfgThF5xHPSi1pttsbeZA9FJ32G6RB2Dg1NsCiLhfK159rXt/NB8BsQD5Nc1rhA5YPwBovYErjpz5yh8hYQYcO28ecWy28QOCCyopn7jRr1xUh46tjOBBIh4E3bmRtgtATAcc1IBDiYwP4ATDUL//mM8hutyl1TxqTf7oxw94i6gGeL4OZOh1XVagkg69lHm2ffHzqfIisA2Qbg2ya/JwowULGiGUYA+WJ5qpAzAY4XyJEEDqlXuNtbbf6rda77EMjLRqz7mtu+fKREXq9X4AMAbqjt84dfMfv8WvzW4xSsyTm22QJUH34QDhK4mODsRqs/EqY6tj2BRAh4Xwi6fQrd2OcCeCrr2jc1+zXVaFQxnAax/jSHWK1iq393UIA/CPh7xEz8mrLk7koU3QqRqQS+t4AfzXO1jSaX5rxMRwG3i8/4q1boIFzVzkcQhJMjYLYAUwgcZjQqxAJa3AnKYpIrmrcPeb90t4jMguDGTl2JinXkBFTAXdwD19pRaxUAixYvMq1xIyWm1dwFeyHAFVk3M79VwDuL5dMsmv0lN2dd+5LWVOaD0oUCeZSCVeYQrKmFXkRW96AdBWwO2Sh4CcKPs07mvH+qpD88I7JYBKPRnXwEQXCo7zg7TPtt/tdtVWQtgR1CzDK2Cfkw56YvaNguBOELgJwSCS7bz0nrDTMj12jbb6iAuyjgWiscmoV8L4DvLHCR79jr3KHhOSTnwFTNFC81wt5bu1sIwhcBnE1gYc61l/h+6QKKNQjyU1pynxBPC7A1cAauHBWGh0lFlgE4ieT9cQRs4mv1UQjK8wHeQoER2sp2Psz3BTIHwmVZN3NLLT48BsgnWdc+q9X27ouWbMq66ZldXrtqrn6amNifle12C7276pTnAtE8QA6qM64AeJ8i83JObV+9NwFX794alkcgOBNAVL8R5AuhNdfzBt5oukHEMlUeqJ4ijyP5aFwB1+8QWwrgNAC7rhXVE+WNTPE6c2Fp52PItR9wiuFzgJwDYBhABsA2oXVjNb4946/pvcm2Kq77BBJdgd/5pfIsBBMZWbMnj5Wt3cZrWtZIOD6FyiZz0BPXflUIEY6VSLZ5nv1e8/dMC1tB6lSL8lXrZ3HtV9vvUmkiKpiEFD5sbvXNZ518tIuvk+2RxKhjOxNItIA749ERSqC3CaiAezs/Gp0S0EMsXQNKoF8JaAXu18zqvBJBQAWciDTrJPuVgAq4XzOr80oEARVwItKsk+xXAirgfs2szisRBFTAiUizTrJfCaiA+zWzOq9EEFABJyLNOsl+JfA3vBywUgvf4dgAAAAASUVORK5CYII=",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Crear ticket"
+    },
+    "Categoria": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "id",
+        "value": "select2-dropdown_itilcategories_id894272230-container",
+        "element": {
+            "tag": "SPAN",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "select2-dropdown_itilcategories_id894272230-container",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#select2-dropdown_itilcategories_id894272230-container",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//span[@id='select2-dropdown_itilcategories_id894272230-container']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//span[@id='category_block_220195173']/div/div/div/span/span/span/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//span/div/div/div/span/span/span/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//span[contains(.,'-----')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN0AAAAkCAYAAAANWT/LAAAAAXNSR0IArs4c6QAAAcZJREFUeF7t07FKxEAQxvG5PWRBUBFJZWHtM6Q7rjKlpPBdtNJnsbQ9kJSGPId1xCIWSwwGuSKQRlPdMAz/65KwN7O/mW8l/BBAQFVgpVqNYgggIISOJUBAWYDQKYNTDgFCxw4goCxA6JTBKYcAoWMHEFAWIHTK4JRDgNCxAwgoCxA6ZXDKIUDo2AEElAUInTI45RAgdOwAAsoChE4ZnHIIEDp2AAFlAUKnDE45BAgdO4CAsgChUwanHAKEjh1AQFlgMXSbzeYyhFCLyNWst4eqqp622+29iDzO3r+P45jvn/858ywid7MzbymlmxjjdQjhVUTOZt9uq6p6UTahHAIHFVgMXVmW67ZtsxDCeuqk7/uuruuvPM9PYoyn0/txHH+yLGv3z3+dKYriPKV0PJ2JMX7vdruPsiyPuq67GIYhTN9SSp9N06SDCvDnCCgLLIZOuR/KIeBegNC5HzEXtCZA6KxNhH7cCxA69yPmgtYECJ21idCPewFC537EXNCaAKGzNhH6cS9A6NyPmAtaEyB01iZCP+4FCJ37EXNBawKEztpE6Me9AKFzP2IuaE2A0FmbCP24FyB07kfMBa0JEDprE6Ef9wK/1W9KJYagkSUAAAAASUVORK5CYII=",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Categoria"
+    },
+    "Buscardor": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "css",
+        "value": ".select2-search--dropdown > .select2-search__field",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": ".select2-search--dropdown > .select2-search__field",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "(//input[@type='search'])[4]",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//span/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUMAAAAeCAYAAAC2VHyaAAAAAXNSR0IArs4c6QAAAflJREFUeF7t3U9Kw0AUx/EXaGZGWoL4ry3pRhB34gm60hPoiVwJ4kI8h6Jr172EFFSQtmmlNNRqJqQwEv9RBC/Q+XbZ3fvkx2Nm3uIFIiJd53Q1Gd3aPD8oinlY/scPAQQQWGYBrVW6ovVFvb55UtYZOOd0r5+MjTHVKKpJWKksc/3UhgACCHwKWJvLeJKKONdpxc120B8Mr5RSx+trqxAhgAACXgk45yQZvojR4V7w+PScx3FDcSL0KgMUiwAC3wLT6UyyLLsM7rsPbndnGxgEEEDAS4H3zEqaTu9ohl5+fopGAIEfAZohWUAAAQREhGZIDBBAAAGaIRlAAAEEvgQ4GZIEBBBAgGZIBhBAAAFOhmQAAQQQ+BXgmkwYEEAAAa7JZAABBBDgmkwGEEAAAa7JZAABBBBYFODNkDwggAACvBmSAQQQQIA3QzKAAAII8GZIBhBAAAHeDMkAAggg8EeAAQqRQAABBBigkAEEEECAAQoZQAABBBigkAEEEECAAQoZQAABBP4boJSrQltxQ1VYHk9IEEDAQ4HX2ZtkNj8vl8hfK6WOWCLvYQooGQHPBRaWyO8Hzjnd6ydjY0w1imrCMnnP00H5CHgiYG0u40kq4lynFTfbQVl32RAHyejG5vlhUcxDTywoEwEEPBbQWqXGmLPG1sZpyfABkK5LEQcWHIMAAAAASUVORK5CYII=",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Buscardor"
+    },
+    "Items": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "css",
+        "value": "#select2-dropdown_itilcategories_id2141219593-container > span",
+        "element": {
+            "tag": "SPAN",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": "#select2-dropdown_itilcategories_id2141219593-container > span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//span[@id='select2-dropdown_itilcategories_id2141219593-container']/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//span/div/div/div/span/span/span/span/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//span[contains(.,'Aplicaciones > Administraci\u00f3n de usuarios Bancolombia Banco')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Items"
+    },
+    "Items_categoria": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "css",
+        "value": "#select2-dropdown_itilcategories_id2141219593-container > span",
+        "element": {
+            "tag": "SPAN",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": "#select2-dropdown_itilcategories_id2141219593-container > span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//span[@id='select2-dropdown_itilcategories_id2141219593-container']/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//span/div/div/div/span/span/span/span/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//span[contains(.,'Aplicaciones > Administraci\u00f3n de usuarios Bancolombia Banco')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Items_categoria"
+    },
+    "Buscar": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "css",
+        "value": ".select2-container--focus .select2-selection__rendered",
+        "element": {
+            "tag": "UL",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": ".select2-container--focus .select2-selection__rendered",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='actors']/div/div[3]/div/span/span/span/ul",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[3]/div/span/span/span/ul",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOcAAAAXCAYAAADwZlg5AAAAAXNSR0IArs4c6QAAAKRJREFUeF7t00ERAAAIAkHpX9oa91gTMCvsHAECSYElUwlFgMAZpxIQiAoYZ/QxYhEwTh0gEBUwzuhjxCJgnDpAICpgnNHHiEXAOHWAQFTAOKOPEYuAceoAgaiAcUYfIxYB49QBAlEB44w+RiwCxqkDBKICxhl9jFgEjFMHCEQFjDP6GLEIGKcOEIgKGGf0MWIRME4dIBAVMM7oY8QiYJw6QCAq8DibABhnJig2AAAAAElFTkSuQmCC",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Buscar"
+    },
+    "Selector": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "css",
+        "value": ".select2-container--focus .select2-selection__rendered",
+        "element": {
+            "tag": "UL",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": ".select2-container--focus .select2-selection__rendered",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='actors']/div/div[3]/div/span/span/span/ul",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[3]/div/span/span/span/ul",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOcAAAAXCAYAAADwZlg5AAAAAXNSR0IArs4c6QAAAKRJREFUeF7t00ERAAAIAkHpX9oa91gTMCvsHAECSYElUwlFgMAZpxIQiAoYZ/QxYhEwTh0gEBUwzuhjxCJgnDpAICpgnNHHiEXAOHWAQFTAOKOPEYuAceoAgaiAcUYfIxYB49QBAlEB44w+RiwCxqkDBKICxhl9jFgEjFMHCEQFjDP6GLEIGKcOEIgKGGf0MWIRME4dIBAVMM7oY8QiYJw6QCAq8DibABhnJig2AAAAAElFTkSuQmCC",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Selector"
+    },
+    "Selector_asigando": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "css",
+        "value": ".select2-container--focus .select2-selection__rendered",
+        "element": {
+            "tag": "UL",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": ".select2-container--focus .select2-selection__rendered",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='actors']/div/div[3]/div/span/span/span/ul",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[3]/div/span/span/span/ul",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOcAAAAXCAYAAADwZlg5AAAAAXNSR0IArs4c6QAAAKRJREFUeF7t00ERAAAIAkHpX9oa91gTMCvsHAECSYElUwlFgMAZpxIQiAoYZ/QxYhEwTh0gEBUwzuhjxCJgnDpAICpgnNHHiEXAOHWAQFTAOKOPEYuAceoAgaiAcUYfIxYB49QBAlEB44w+RiwCxqkDBKICxhl9jFgEjFMHCEQFjDP6GLEIGKcOEIgKGGf0MWIRME4dIBAVMM7oY8QiYJw6QCAq8DibABhnJig2AAAAAElFTkSuQmCC",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Selector_asigando"
+    },
+    "Titulo": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "id",
+        "value": "name_1365994332",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "name_1365994332",
+                "matches": 1
+            },
+            {
+                "strategy": "name",
+                "value": "name",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#name_1365994332",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='name_1365994332']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//form[@id='itil-form']/div/div/div/div/div/div[2]/span/div/div[2]/div/div/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[2]/div/div/input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAewAAAAkCAYAAABL5gkNAAAAAXNSR0IArs4c6QAAAq9JREFUeF7t1U1OU1EYBuBzAlcKE0dSq4UGYxwZV6CDjtkBI3ZhcM5SZAeaOGrcgWEitdh6oVB+nDiBwm1yDSauof2S5w7v5Lx53i95c0op1XW91D8e7ueUd1NKzYd/PgIECBAgQGCeAvm8ruuDyVm51+12Z7nX6y232p1Pq42V61bzyduiKDrzjOdtAgQIECBAIKVqNrueXFx+uZ3er0/G5XbuD37urTZWX2+0WzuACBAgQIAAgcUSOB1PDm5up99yfzD6vtV5vlYUxeZiRZSGAAECBAgQqKrZ71F5cpn7g2H96uUWEQIECBAgQGBBBX4cj5LBXtByxCJAgAABAv8FDLZbIECAAAECAQQMdoCSRCRAgAABAgbbDRAgQIAAgQACBjtASSISIECAAAGD7QYIECBAgEAAAYMdoCQRCRAgQICAwXYDBAgQIEAggIDBDlCSiAQIECBAwGC7AQIECBAgEEDAYAcoSUQCBAgQIGCw3QABAgQIEAggYLADlCQiAQIECBAw2G6AAAECBAgEEDDYAUoSkQABAgQIGGw3QIAAAQIEAggY7AAliUiAAAECBAy2GyBAgAABAgEEDHaAkkQkQIAAAQIG2w0QIECAAIEAAgY7QEkiEiBAgAABg+0GCBAgQIBAAAGDHaAkEQkQIECAgMF2AwQIECBAIICAwQ5QkogECBAgQMBguwECBAgQIBBAwGAHKElEAgQIECDwb7CPBsPDF53246IoNpEQIECAAAECiyVQVdXJsBz/yUeD0fu1xsqbjXZrZ7EiSkOAAAECBAicjicHN9O7w9zr9ZaftTufG41Hl63m+ruiKDp4CBAgQIAAgfkKVFVVTi6uvt7d3T89G5fb+SFOXddLg+Nf+3Wqd1NKzflG9DoBAgQIECCQUj7Puf54dlp+6Ha7s78jnSloPtgHjgAAAABJRU5ErkJggg==",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Titulo"
+    },
+    "Usuario_GLPI": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+        "strategy": "id",
+        "value": "login_name",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "id",
+                "value": "login_name",
+                "matches": 1
+            },
+            {
+                "strategy": "name",
+                "value": "fielda69e2c26fb1283",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": "#login_name",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@id='login_name']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[2]/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:input-label",
+                "value": "//label[contains(.,'Usuario')]/../input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVEAAAAkCAYAAAAw7gmEAAAAAXNSR0IArs4c6QAAAl5JREFUeF7t1LFOU2EYx+HvJBwpJIZJm0qhUsV0MBInFr0RJu6CuOggd8DKoIOJg1EXXXsPLEIaC6ERihoTYyVaSo9pjE4QIO/I07H9/kOfvPllKaXUbDbHKtXZ1Sxlyyml8ug7HwIECBA4UWC9OE5rjUZ9Y/Rr9jegtXcTpfEvlfK1B3me18ARIECAwIkCRa93+Ha/+3khS8XK/Hz9VbbV+vhoojRxd6ZaWYJGgAABAmcL9PtH33Z2O93B1NXFbKu1/WGuNj2Z5/ns2VMvCBAgQGAk0N7pvOkPj55kW612cef2HBUCBAgQuIDAbmfv2eHv/nMRvQCapwQIEPgnIKJugQABAgEBEQ3gmRIgQEBE3QABAgQCAiIawDMlQICAiLoBAgQIBARENIBnSoAAARF1AwQIEAgIiGgAz5QAAQIi6gYIECAQEBDRAJ4pAQIERNQNECBAICAgogE8UwIECIioGyBAgEBAQEQDeKYECBAQUTdAgACBgICIBvBMCRAgIKJugAABAgEBEQ3gmRIgQEBE3QABAgQCAiIawDMlQICAiLoBAgQIBARENIBnSoAAARF1AwQIEAgIiGgAz5QAAQIi6gYIECAQEBDRAJ4pAQIE/kd0s9XeqNeqU3mez2IhQIAAgfMJtHc6L4eD4mm22dpemSyN35upVpbON/WKAAECl1ug1/v5fa978GnQ/7WYNZvNsRvV2vtS6cpBpXz9YZ7ntcvN498TIEDgVIHiR6/3er/79X6Rho8b87deZKOno5BOV2+uFqlYTimVARIgQIDAqQLrxXFaazTqG6MXfwAjRZDPv0yeDwAAAABJRU5ErkJggg==",
+        "frame": {
+            "name": "",
+            "title": "Autenticaci\u00f3n - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Usuario_GLPI"
+    },
+    "Contrase\u00f1a_GLPI": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+        "strategy": "name",
+        "value": "fieldb69e2c26fb1286",
+        "element": {
+            "tag": "INPUT",
+            "type": "text",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "name",
+                "value": "fieldb69e2c26fb1286",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": ".mb-4 > .form-control",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//input[@name='fieldb69e2c26fb1286']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[3]/input",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:input-label",
+                "value": "//label[contains(.,'Contrase\u00f1a\n\u00bfOlvid\u00f3 su contrase\u00f1a?')]/../input",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVEAAAAkCAYAAAAw7gmEAAAAAXNSR0IArs4c6QAAAl5JREFUeF7t1LFOU2EYx+HvJBwpJIZJm0qhUsV0MBInFr0RJu6CuOggd8DKoIOJg1EXXXsPLEIaC6ERihoTYyVaSo9pjE4QIO/I07H9/kOfvPllKaXUbDbHKtXZ1Sxlyyml8ug7HwIECBA4UWC9OE5rjUZ9Y/Rr9jegtXcTpfEvlfK1B3me18ARIECAwIkCRa93+Ha/+3khS8XK/Hz9VbbV+vhoojRxd6ZaWYJGgAABAmcL9PtH33Z2O93B1NXFbKu1/WGuNj2Z5/ns2VMvCBAgQGAk0N7pvOkPj55kW612cef2HBUCBAgQuIDAbmfv2eHv/nMRvQCapwQIEPgnIKJugQABAgEBEQ3gmRIgQEBE3QABAgQCAiIawDMlQICAiLoBAgQIBARENIBnSoAAARF1AwQIEAgIiGgAz5QAAQIi6gYIECAQEBDRAJ4pAQIERNQNECBAICAgogE8UwIECIioGyBAgEBAQEQDeKYECBAQUTdAgACBgICIBvBMCRAgIKJugAABAgEBEQ3gmRIgQEBE3QABAgQCAiIawDMlQICAiLoBAgQIBARENIBnSoAAARF1AwQIEAgIiGgAz5QAAQIi6gYIECAQEBDRAJ4pAQIE/kd0s9XeqNeqU3mez2IhQIAAgfMJtHc6L4eD4mm22dpemSyN35upVpbON/WKAAECl1ug1/v5fa978GnQ/7WYNZvNsRvV2vtS6cpBpXz9YZ7ntcvN498TIEDgVIHiR6/3er/79X6Rho8b87deZKOno5BOV2+uFqlYTimVARIgQIDAqQLrxXFaazTqG6MXfwAjRZDPv0yeDwAAAABJRU5ErkJggg==",
+        "frame": {
+            "name": "",
+            "title": "Autenticaci\u00f3n - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Contrase\u00f1a_GLPI"
+    },
+    "Inicio": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+        "strategy": "name",
+        "value": "submit",
+        "element": {
+            "tag": "BUTTON",
+            "type": "button",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "name",
+                "value": "submit",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": ".btn",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//button[@name='submit']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//button",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//button[contains(.,'Iniciar sesi\u00f3n')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Autenticaci\u00f3n - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Inicio"
+    },
+    "Iniciar Sesion": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+        "strategy": "name",
+        "value": "submit",
+        "element": {
+            "tag": "BUTTON",
+            "type": "button",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "name",
+                "value": "submit",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": ".btn",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//button[@name='submit']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//button",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//button[contains(.,'Iniciar sesi\u00f3n')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Autenticaci\u00f3n - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/index.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Iniciar Sesion"
+    },
+    "Agregar": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "name",
+        "value": "add",
+        "element": {
+            "tag": "BUTTON",
+            "type": "button",
+            "modifier": ""
+        },
+        "alternatives": [
+            {
+                "strategy": "name",
+                "value": "add",
+                "matches": 1
+            },
+            {
+                "strategy": "css",
+                "value": ".btn-primary:nth-child(1)",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:attributes",
+                "value": "//button[@name='add']",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='itil-footer']/div/div[2]/span[2]/button",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//div[2]/span[2]/button",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//button[contains(.,'Agregar')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,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",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Agregar"
+    },
+    "Agregar_2": {
+        "type": "browser",
+        "source": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+        "strategy": "css",
+        "value": ".d-lg-block:nth-child(2)",
+        "element": {
+            "tag": "SPAN",
+            "type": null,
+            "modifier": null
+        },
+        "alternatives": [
+            {
+                "strategy": "css",
+                "value": ".d-lg-block:nth-child(2)",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:relative-id",
+                "value": "//div[@id='itil-footer']/div/div[2]/span[2]/button/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:position",
+                "value": "//span[2]/button/span",
+                "matches": 1
+            },
+            {
+                "strategy": "xpath:inner-text",
+                "value": "//span[contains(.,'Agregar')]",
+                "matches": 1
+            }
+        ],
+        "screenshot": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAUCAYAAADGIc7gAAAAAXNSR0IArs4c6QAABG9JREFUWEftln9olHUcx9/v53lu7mwVpGnS7s6VP3a7tX/EH+25yQWpQWq/kE0NyiJqIQVSRLE/RlhNBYNNxgqTflj6zyoxsLLylrubWoOI3XZK5O42iRUME9Ftd8/3E9/bbkzZjysQ2ur58/t8P+/P5/X9vL8/iBn6cYZy4X+w6dbZ/0rHNpl3l12YMzCUdi7Ez/QDkOnWqWy913TMW2IHITgBoI/KrEic/f78zAArtutBPAfAFMjWnq7o4WkPVlS6cr6jrDAEXwJYAuJqcp6rCuFwOgtXWHivmzeb2wh5ipDTdKRBmXySZEuiM3LM57efFnCuiPMTadQI8XFPZ6Rp0aKVt6Rc1osCPASgQxT29ZyN/JirLgAWlgRXGCLVAEoBfOe40vUXfj7dqzXGyztqxcJA8AFDSTOIdQACENQJpKKnK9qhg4ehjIMENkB4RI8JZDGJxQBfT3a17vL67Q8AbCZwUYBjMOSoqfCDAxwXcBaJ90Vwj9agSFUiHm3OSbe4/BmQTRB+SiIskGoQpmOl12i48fJmwegtsQ9Q4DcHB9alLfccmBKh4I1EPLJPQ3j9wfsB+QqUJ5Kd0YN6zOO3KwkcAvjqGLA1ylCre2Ntv2TiSoK1gFSaRjp0vuN0n159j99uMCClV4y89W6VXjWF7u6iQLDMUTIv2RX5Rq+nJ1C+nIonSGzSThkBuyZvBsy3dHWRGM5JkPuTna21CIUs7++pwxSZq5P/EQtf9hSX7yD5MhzayXOtv+q4O8tWFpop6xTAhiwYIb5szPyytTfNSl0+AjAPhtSPnliK5Qp4zICxSomzeSpdHZfZKmnXClD5AW4AEIRwYzLeelSDjc2r5w+DldhbRZDpwnXfEEVCiXi0zesPviKQ53Uxia6Tvw17u2KBgjpFsHE8sNsDoYLZaugLAX0Aj1+rrfqNWXl1ajD97BS6u33FwR1C2QPgHCgtAPsheAnCRycEW7gwlK/cqWZdJ4VviqmGMsSKtwJ4S8hG3UVPwN5Ihc+UwQd7Y636gIFvqX2fGPgaYM14YFpGWxzgAnXJeaS3t+2qjgsEAnmxWCw1bKvJdQl+qBfPAPYnuiI7x1ixBcLKCcE8/vJSgicB1uniRlc1FLJ8femPBLIIFtc6qSHDhOsYiDsg1Al0v7cDEgD42gRg8PrtNQA+h2AnXGxSypljKOMAyCsaVgqc2ZPpph3rPctMtQDSPugqqLaGLuYbhquegi2TWtFXbG8XYheEq5Px1vaxdrl+NfWeslKuPQKxM5c4pFaBjRNZcUSLXn/wcUDeAeAeGWszxNnSHT/Vnd2rk+l6/BUPE+qTkfiUAO8S2AZh1aR7LNdLWFsoPz9f2tvbtY1GDw8R2dsTj+6dXGf4uXbJybuiD6Oxc3PRXbZsmat/0LpNLrv/7O4OD0xVc86PYO+S4F0w5VsAZxTMGi1swNGWXD9et6dKnP1/o3RzBsvcSUsrbFC9DWL5SGExUl5IdEb1+/IfP5hvhO7fAsu1C/+GeX8Bf/y19PJwyDAAAAAASUVORK5CYII=",
+        "frame": {
+            "name": "",
+            "title": "Casos - Nuevo elemento - GLPI",
+            "url": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "sourceURL": "http://172.0.0.60/Mesa_Servicios_Tecnologicos/front/ticket.form.php",
+            "isMain": true,
+            "props": null
+        },
+        "name": "Agregar_2"
     }
 }
