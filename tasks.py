@@ -50,7 +50,7 @@ def ejecutar_actualizacion_db(query, conn):
         print(f"Error ejecutando actualización en BD: {e}")
         return False
 
-def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, password_generado=None):
+def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, password_generado=None, estado_helix=None):
     print("\n=== Iniciando creación de ticket en GLPI ===")
     try:
         context = page.context
@@ -134,6 +134,9 @@ def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, passwo
         
         # Construir la descripción de manera dinámica
         descripcion_glpi = "Buen día,\nMe colaboran gestionando este ticket del Helix para activación de usuario de Bancolombia.\nadjunto evidencia:\n\n"
+        
+        if estado_helix:
+            descripcion_glpi += f"Estado fijado en Helix: {estado_helix}\n\n"
         
         if datos_extraidos:
             descripcion_glpi += "--- Datos del usuario de Helix ---\n"
@@ -352,7 +355,8 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
             if page:
                 login_a_enviar = login_final if existe else None
                 pass_a_enviar = cedula if existe else None
-                generar_informe_glpi(page, datos_extraidos, login_a_enviar, pass_a_enviar)
+                estado_h = "Finalizado" if existe else "Rechazado"
+                generar_informe_glpi(page, datos_extraidos, login_a_enviar, pass_a_enviar, estado_h)
                 
         elif "Creación" in tipo_solicitud or "Creacion" in tipo_solicitud:
             print(f"Validando creacion de '{cedula}'...")
