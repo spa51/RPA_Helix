@@ -7,7 +7,7 @@ channels:
 
 dependencies:
   - python=3.12.13                 # https://pyreadiness.org/3.10
-  - uv=0.10.9                # https://pypi.org/project/uv -  cambiar por uv=0.6.0 para poder ejecutar desde la consola externa -  nativo uv=0.10.9
+  - uv=0.6.0                # https://pypi.org/project/uv -  cambiar por uv=0.6.0 para poder ejecutar desde la consola externa -  nativo uv=0.10.9
   - pip:
     - rpaframework==31.2.0        # https://rpaframework.org/releasenotes.html
     - robocorp==3.1.1             # https://pypi.org/project/robocorp

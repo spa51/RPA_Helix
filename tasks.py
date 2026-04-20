@@ -50,7 +50,63 @@ def ejecutar_actualizacion_db(query, conn):
         print(f"Error ejecutando actualización en BD: {e}")
         return False
 
-def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, password_generado=None, estado_helix=None):
+def ejecutar_consulta_fila_db(query, conn):
+    """Retorna la primera fila completa como dict o None."""
+    if not conn:
+        return None
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute(query)
+            row = cursor.fetchone()
+            if row and cursor.description:
+                cols = [col[0] for col in cursor.description]
+                return dict(zip(cols, row))
+            return None
+    except Exception as e:
+        print(f"Error ejecutando consulta de fila en BD: {e}")
+        return None
+
+# Mapeo de Línea de Negocio (Helix) → (CMPN_CODIGO, ESOR_CODIGO)
+LINEAS_NEGOCIO = {
+    "bancolombia": [("BANCOLOMBI", "PIC")],
+    "sufi":        [("SUFI",       "PIC")],
+    "leasing":     [("LEASINGBAN", "ARCHIVO")],
+    "factoring":   [("FACTBANCOL", "GARANTIAS")],
+    "todos":       [
+        ("BANCOLOMBI", "PIC"),
+        ("LEASINGBAN", "ARCHIVO"),
+        ("SUFI",       "PIC"),
+        ("FACTBANCOL", "GARANTIAS"),
+    ],
+}
+
+def lineas_desde_helix(linea_negocio_texto):
+    """Convierte el texto de Línea de Negocio de Helix a lista de (CMPN, ESOR)."""
+    texto = linea_negocio_texto.strip().lower()
+    for clave, valor in LINEAS_NEGOCIO.items():
+        if clave in texto:
+            return valor
+    return [("BANCOLOMBI", "PIC")]  # Default
+
+def generar_login(nombre_completo, conn):
+    """
+    Genera un LOGIN tomando las 2 primeras letras de cada palabra,
+    hasta un máximo de 4 palabras (8 caracteres). Si el LOGIN ya existe,
+    agrega un dígito incremental al final.
+    """
+    palabras = nombre_completo.upper().split()
+    palabras = palabras[:4]  # máximo 4 palabras
+    base = "".join([p[:2] for p in palabras if len(p) >= 2])
+    login = base
+    sufijo = 1
+    while True:
+        res = ejecutar_consulta_db(f"SELECT COUNT(*) FROM a_usuario WHERE LOGIN = '{login}'", conn)
+        if res and res.strip() == "0":
+            return login
+        login = base + str(sufijo)
+        sufijo += 1
+
+def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, password_generado=None, estado_helix=None, titulo_glpi="ACTIVACION USUARIO BANCO"):
     print("\n=== Iniciando creación de ticket en GLPI ===")
     try:
         context = page.context
@@ -124,7 +180,7 @@ def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, passwo
         # 3. Título (id dinámico)
         print("Ingresando título...")
         titulo_input = glpi_page.locator("input[id^='name_']")
-        titulo_input.fill("ACTIVACION USUARIO BANCO")
+        titulo_input.fill(titulo_glpi)
         
         # 4. Descripción (dentro del iframe de TinyMCE)
         print("Ingresando descripción...")
@@ -259,7 +315,7 @@ Saludos,"""
                             page.wait_for_timeout(2000) # Esperar a que consolide la asignación
                             btn_editar_sel = 'button[name="ar304420591"], button[title="Editar"]'
                             btn_editar_loc = frame.locator(btn_editar_sel).first if frame else page.locator(btn_editar_sel).first
-                            btn_editar_loc.wait_for(state="visible", timeout=10000)
+                            btn_editar_loc.wait_for(state="visible", timeout=5000)
                             btn_editar_loc.click()
                             
                             # 2. Clic en select "Estado"
@@ -270,10 +326,15 @@ Saludos,"""
                             estado_loc.click()
                             
                             # 3. Seleccionar "Finalizado"
-                            page.wait_for_timeout(1000)
-                            finalizado_sel = 'button.rx-select__option:has-text("Finalizado"), button[role="option"]:has-text("Finalizado")'
+                            page.wait_for_timeout(2000)
+                            finalizado_sel = (
+                                'button.rx-select__option:has-text("Finalizado"), '
+                                'button[role="option"]:has-text("Finalizado"), '
+                                'button.rx-select__option:has-text("Completed"), '
+                                'button[role="option"]:has-text("Completed")'
+                            )
                             finalizado_loc = frame.locator(finalizado_sel).first if frame else page.locator(finalizado_sel).first
-                            finalizado_loc.wait_for(state="visible", timeout=5000)
+                            finalizado_loc.wait_for(state="visible", timeout=10000)
                             finalizado_loc.click()
                             
                             # 4. Clic en "Guardar ticket"
@@ -336,7 +397,12 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                     
                     # 5. Seleccionar "Rechazado"
                     page.wait_for_timeout(1000)
-                    rechazado_sel = 'button.rx-select__option:has-text("Rechazado"), button[role="option"]:has-text("Rechazado")'
+                    rechazado_sel = (
+                        'button.rx-select__option:has-text("Rechazado"), '
+                        'button[role="option"]:has-text("Rechazado"), '
+                        'button.rx-select__option:has-text("Rejected"), '
+                        'button[role="option"]:has-text("Rejected")'
+                    )
                     rechazado_loc = frame.locator(rechazado_sel).first if frame else page.locator(rechazado_sel).first
                     rechazado_loc.wait_for(state="visible", timeout=5000)
                     rechazado_loc.click()
@@ -360,14 +426,314 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                 
         elif "Creación" in tipo_solicitud or "Creacion" in tipo_solicitud:
             print(f"Validando creacion de '{cedula}'...")
-            if cedula:
-                res = ejecutar_consulta_db(f"SELECT COUNT(*) FROM a_usuario WHERE NO_IDENTIFICACION = '{cedula}'", conn)
-                if res and res.strip() != "0":
-                    print("existe")
+            nombre_completo  = datos_extraidos.get("Nombre Completo", "")
+            email_usuario    = datos_extraidos.get("Correo", "")
+            usuario_ref      = datos_extraidos.get("Usuario de referencia DATASOFT", "")
+            linea_negocio    = datos_extraidos.get("Línea de Negocio", "")
+
+            # ── 1. Validar que el usuario de referencia exista ──────────────────
+            ref_fila = ejecutar_consulta_fila_db(
+                f"SELECT LOGIN, CMPN_CODIGO, ESOR_CODIGO, NOMBRE_USUARIO FROM a_usuario WHERE LOGIN = '{usuario_ref}'",
+                conn
+            )
+            if not ref_fila:
+                print("Usuario de referencia no existe. Rechazando...")
+                msg = ("Buen dia.\nTras validar el ticket, confirmamos que la cuenta solicitada "
+                       "del Usuario de referencia no existe.\n"
+                       "Por este motivo, procedemos con el rechazo de la solicitud.\n"
+                       "Por favor, genere un nuevo requerimiento con un Usuario de referencia Correcto.")
+                try:
+                    textarea_selector = 'textarea[data-testid="304247080"], textarea[name="ar304247080"]'
+                    loc = frame.locator(textarea_selector).first if frame else page.locator(textarea_selector).first
+                    loc.wait_for(state="visible", timeout=10000)
+                    loc.fill(msg)
+                    btn_selector = 'button[name="ar304268430"], button[id="304268430"], button[title="Publicación"]'
+                    btn_loc = frame.locator(btn_selector).first if frame else page.locator(btn_selector).first
+                    btn_loc.wait_for(state="visible", timeout=5000)
+                    btn_loc.click()
+                    page.wait_for_timeout(2000)
+                    btn_asignar_sel = 'button[name="ar304421551"], button[id="304421551"], button[title="Asignarme a mí"]'
+                    btn_asignar_loc = frame.locator(btn_asignar_sel).first if frame else page.locator(btn_asignar_sel).first
+                    btn_asignar_loc.wait_for(state="visible", timeout=10000)
+                    btn_asignar_loc.click()
+                    page.wait_for_timeout(2000)
+                    btn_editar_sel = 'button[name="ar304420591"], button[title="Editar"]'
+                    btn_editar_loc = frame.locator(btn_editar_sel).first if frame else page.locator(btn_editar_sel).first
+                    btn_editar_loc.wait_for(state="visible", timeout=10000)
+                    btn_editar_loc.click()
+                    page.wait_for_timeout(1000)
+                    estado_sel = 'button[name="ar7"], button[aria-label="Estado"]'
+                    estado_loc = frame.locator(estado_sel).first if frame else page.locator(estado_sel).first
+                    estado_loc.wait_for(state="visible", timeout=10000)
+                    estado_loc.click()
+                    page.wait_for_timeout(1000)
+                    rechazado_sel = (
+                        'button.rx-select__option:has-text("Rechazado"), '
+                        'button[role="option"]:has-text("Rechazado"), '
+                        'button.rx-select__option:has-text("Rejected"), '
+                        'button[role="option"]:has-text("Rejected")'
+                    )
+                    rechazado_loc = frame.locator(rechazado_sel).first if frame else page.locator(rechazado_sel).first
+                    rechazado_loc.wait_for(state="visible", timeout=5000)
+                    rechazado_loc.click()
+                    page.wait_for_timeout(1000)
+                    guardar_sel = 'button[name="ar304440891"], button[title="Guardar ticket"]'
+                    guardar_loc = frame.locator(guardar_sel).first if frame else page.locator(guardar_sel).first
+                    guardar_loc.wait_for(state="visible", timeout=5000)
+                    guardar_loc.click()
+                    print("Ticket rechazado por usuario de referencia inexistente.")
+                except Exception as e:
+                    print(f"Aviso: Error al rechazar ticket por ref inexistente: {e}")
+                if page:
+                    generar_informe_glpi(page, datos_extraidos, None, None, "Rechazado", "CREACION USUARIO BANCO")
+                return
+
+            ref_cmpn = ref_fila.get("CMPN_CODIGO", "BANCOLOMBI")
+            ref_esor = ref_fila.get("ESOR_CODIGO", "PIC")
+
+            # ── 2. Verificar si usuario ya existe por cédula ─────────────────────
+            login_existente = ejecutar_consulta_db(
+                f"SELECT LOGIN FROM a_usuario WHERE NO_IDENTIFICACION = '{cedula}'", conn
+            )
+            usuario_ya_existe = login_existente and login_existente.strip() not in ("0", "")
+
+            # Líneas de negocio que corresponden según Helix
+            lineas_requeridas = lineas_desde_helix(linea_negocio)
+
+            if usuario_ya_existe:
+                login_existente = login_existente.strip()
+                print(f"Usuario ya existe: {login_existente}. Verificando autorizaciones...")
+
+                # Verificar qué líneas ya tiene en AUTORIZADO
+                lineas_faltantes = []
+                for cmpn, esor in lineas_requeridas:
+                    res_autr = ejecutar_consulta_db(
+                        f"SELECT COUNT(*) FROM AUTORIZADO WHERE AUTR_CODIGO = '{login_existente}' AND AUTR_CMPN_CODIGO = '{cmpn}'",
+                        conn
+                    )
+                    if res_autr and res_autr.strip() == "0":
+                        lineas_faltantes.append((cmpn, esor))
+
+                if not lineas_faltantes:
+                    # ── Escenario B1: ya tiene todo → Rechazar ─────────────────
+                    print("El usuario ya tiene todas las autorizaciones solicitadas. Rechazando...")
+                    msg = ("Buen dia.\nTras validar el ticket, confirmamos que la cuenta solicitada ya existe "
+                           "y cuenta con la Línea de Negocio indicada.\n"
+                           "Por este motivo, procedemos con el rechazo de la solicitud.")
+                    try:
+                        textarea_selector = 'textarea[data-testid="304247080"], textarea[name="ar304247080"]'
+                        loc = frame.locator(textarea_selector).first if frame else page.locator(textarea_selector).first
+                        loc.wait_for(state="visible", timeout=10000)
+                        loc.fill(msg)
+                        btn_selector = 'button[name="ar304268430"], button[id="304268430"], button[title="Publicación"]'
+                        btn_loc = frame.locator(btn_selector).first if frame else page.locator(btn_selector).first
+                        btn_loc.wait_for(state="visible", timeout=5000)
+                        btn_loc.click()
+                        page.wait_for_timeout(2000)
+                        btn_asignar_sel = 'button[name="ar304421551"], button[id="304421551"], button[title="Asignarme a mí"]'
+                        btn_asignar_loc = frame.locator(btn_asignar_sel).first if frame else page.locator(btn_asignar_sel).first
+                        btn_asignar_loc.wait_for(state="visible", timeout=10000)
+                        btn_asignar_loc.click()
+                        page.wait_for_timeout(2000)
+                        btn_editar_sel = 'button[name="ar304420591"], button[title="Editar"]'
+                        btn_editar_loc = frame.locator(btn_editar_sel).first if frame else page.locator(btn_editar_sel).first
+                        btn_editar_loc.wait_for(state="visible", timeout=10000)
+                        btn_editar_loc.click()
+                        page.wait_for_timeout(1000)
+                        estado_sel = 'button[name="ar7"], button[aria-label="Estado"]'
+                        estado_loc = frame.locator(estado_sel).first if frame else page.locator(estado_sel).first
+                        estado_loc.wait_for(state="visible", timeout=10000)
+                        estado_loc.click()
+                        page.wait_for_timeout(1000)
+                        rechazado_sel = (
+                            'button.rx-select__option:has-text("Rechazado"), '
+                            'button[role="option"]:has-text("Rechazado"), '
+                            'button.rx-select__option:has-text("Rejected"), '
+                            'button[role="option"]:has-text("Rejected")'
+                        )
+                        rechazado_loc = frame.locator(rechazado_sel).first if frame else page.locator(rechazado_sel).first
+                        rechazado_loc.wait_for(state="visible", timeout=5000)
+                        rechazado_loc.click()
+                        page.wait_for_timeout(1000)
+                        guardar_sel = 'button[name="ar304440891"], button[title="Guardar ticket"]'
+                        guardar_loc = frame.locator(guardar_sel).first if frame else page.locator(guardar_sel).first
+                        guardar_loc.wait_for(state="visible", timeout=5000)
+                        guardar_loc.click()
+                        print("Ticket rechazado: usuario ya existe con esa línea de negocio.")
+                    except Exception as e:
+                        print(f"Aviso: Error al rechazar ticket (Escenario B1): {e}")
+                    if page:
+                        generar_informe_glpi(page, datos_extraidos, None, None, "Rechazado", "CREACION USUARIO BANCO")
+                    return
+
                 else:
-                    print("no existe")
+                    # ── Escenario B2: falta alguna línea → Añadir AUTORIZADO + autorizado_serie ──
+                    print(f"Añadiendo {len(lineas_faltantes)} autorización(es) faltante(s)...")
+                    nombre_ref = ref_fila.get("NOMBRE_USUARIO", nombre_completo)
+                    for cmpn, esor in lineas_faltantes:
+                        q_autr = (f"INSERT INTO AUTORIZADO (AUTR_CMPN_CODIGO, AUTR_ESOR_CODIGO, AUTR_CODIGO, AUTR_NOMBRE) "
+                                  f"VALUES ('{cmpn}', '{esor}', '{login_existente}', '{nombre_completo}')")
+                        ejecutar_actualizacion_db(q_autr, conn)
+                        q_serie = (f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
+                                   f"SELECT AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, '{login_existente}', '{nombre_completo}' "
+                                   f"FROM autorizado_serie WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'")
+                        ejecutar_actualizacion_db(q_serie, conn)
+                    print("Autorizaciones añadidas exitosamente.")
+
+                    msg_exito = (f"Buen dia.\nTras validar el ticket, confirmamos que la cuenta {login_existente} "
+                                 f"ya existía y se le ha añadido la Línea de Negocio solicitada ({linea_negocio}).\n"
+                                 f"El usuario puede iniciar sesión con su contraseña actual.")
+                    try:
+                        textarea_selector = 'textarea[data-testid="304247080"], textarea[name="ar304247080"]'
+                        loc = frame.locator(textarea_selector).first if frame else page.locator(textarea_selector).first
+                        loc.wait_for(state="visible", timeout=10000)
+                        loc.fill(msg_exito)
+                        btn_selector = 'button[name="ar304268430"], button[id="304268430"], button[title="Publicación"]'
+                        btn_loc = frame.locator(btn_selector).first if frame else page.locator(btn_selector).first
+                        btn_loc.wait_for(state="visible", timeout=5000)
+                        btn_loc.click()
+                        page.wait_for_timeout(2000)
+                        btn_asignar_sel = 'button[name="ar304421551"], button[id="304421551"], button[title="Asignarme a mí"]'
+                        btn_asignar_loc = frame.locator(btn_asignar_sel).first if frame else page.locator(btn_asignar_sel).first
+                        btn_asignar_loc.wait_for(state="visible", timeout=10000)
+                        btn_asignar_loc.click()
+                        page.wait_for_timeout(2000)
+                        btn_editar_sel = 'button[name="ar304420591"], button[title="Editar"]'
+                        btn_editar_loc = frame.locator(btn_editar_sel).first if frame else page.locator(btn_editar_sel).first
+                        btn_editar_loc.wait_for(state="visible", timeout=10000)
+                        btn_editar_loc.click()
+                        page.wait_for_timeout(1000)
+                        estado_sel = 'button[name="ar7"], button[aria-label="Estado"]'
+                        estado_loc = frame.locator(estado_sel).first if frame else page.locator(estado_sel).first
+                        estado_loc.wait_for(state="visible", timeout=10000)
+                        estado_loc.click()
+                        page.wait_for_timeout(1000)
+                        finalizado_sel = (
+                            'button.rx-select__option:has-text("Finalizado"), '
+                            'button[role="option"]:has-text("Finalizado"), '
+                            'button.rx-select__option:has-text("Completed"), '
+                            'button[role="option"]:has-text("Completed")'
+                        )
+                        finalizado_loc = frame.locator(finalizado_sel).first if frame else page.locator(finalizado_sel).first
+                        finalizado_loc.wait_for(state="visible", timeout=5000)
+                        finalizado_loc.click()
+                        page.wait_for_timeout(1000)
+                        guardar_sel = 'button[name="ar304440891"], button[title="Guardar ticket"]'
+                        guardar_loc = frame.locator(guardar_sel).first if frame else page.locator(guardar_sel).first
+                        guardar_loc.wait_for(state="visible", timeout=5000)
+                        guardar_loc.click()
+                        print("Ticket finalizado: autorización añadida.")
+                    except Exception as e:
+                        print(f"Aviso: Error al finalizar ticket (Escenario B2): {e}")
+                    if page:
+                        generar_informe_glpi(page, datos_extraidos, login_existente, cedula, "Finalizado", "CREACION USUARIO BANCO")
+                    return
+
             else:
-                print("no existe") # Si no hay cédula, asumimos que no existe
+                # ── Escenario A: Usuario no existe → Creación Completa ─────────
+                print("Usuario no existe. Creando...")
+                nuevo_login = generar_login(nombre_completo, conn)
+                print(f"LOGIN generado: {nuevo_login}")
+
+                # 1. INSERT a_usuario
+                q_usuario = (
+                    f"INSERT INTO a_usuario (ID_USUARIO, LOGIN, CONTRASENA, ID_GRUPO_USUARIO, NOMBRE_USUARIO, "
+                    f"ESTADO, LOGIN_USUARIO, FECHA_ULTIMA_ACT, CMPN_CODIGO, ESOR_CODIGO, E_MAIL, "
+                    f"TIPO_USUARIO, CAMBIO_CONTRASENA, FECHA_CAMBIO_CONTRASENA, NO_INTENTOS, "
+                    f"RESTABLECE_CONTRASENA, NO_IDENTIFICACION, FECHA_CREACION) "
+                    f"VALUES (seq_a_usuario.nextval, '{nuevo_login}', '{cedula}', 462, "
+                    f"'{nombre_completo}', 'A', 'SPINE', SYSDATE, '{ref_cmpn}', '{ref_esor}', "
+                    f"'{email_usuario}', 'E', 'N', SYSDATE, 0, 'S', '{cedula}', SYSDATE)"
+                )
+                exito_usuario = ejecutar_actualizacion_db(q_usuario, conn)
+                if not exito_usuario:
+                    print("Error: No se pudo crear el usuario en a_usuario. Abortando.")
+                    return
+                print("Usuario creado en a_usuario exitosamente.")
+
+                # 2. INSERT AUTORIZADO
+                for cmpn, esor in lineas_requeridas:
+                    q_autr = (f"INSERT INTO AUTORIZADO (AUTR_CMPN_CODIGO, AUTR_ESOR_CODIGO, AUTR_CODIGO, AUTR_NOMBRE) "
+                              f"VALUES ('{cmpn}', '{esor}', '{nuevo_login}', '{nombre_completo}')")
+                    ejecutar_actualizacion_db(q_autr, conn)
+                print(f"{len(lineas_requeridas)} registro(s) insertado(s) en AUTORIZADO.")
+
+                # 3. INSERT autorizado_serie (copia masiva)
+                q_serie = (
+                    f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
+                    f"SELECT AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, '{nuevo_login}', '{nombre_completo}' "
+                    f"FROM autorizado_serie WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'"
+                )
+                exito_serie = ejecutar_actualizacion_db(q_serie, conn)
+                if exito_serie:
+                    print("Permisos de autorizado_serie copiados exitosamente.")
+
+                # Nota en Helix + finalizar
+                mensaje_creacion = (
+                    f"POR FAVOR LEER MUY DESPACIO Y SEGUIR EL PASO A PASO CON LAS INSTRUCCIONES QUE SE DETALLAN A CONTINUACIÓN\n\n"
+                    f"Buen día.\n\n"
+                    f"Tu usuario ha sido creado exitosamente;\n"
+                    f"Usuario: {nuevo_login}\n"
+                    f"Contraseña: {cedula}\n\n"
+                    f"Debes realizar los siguientes pasos para restablecer la contraseña o cambiarla:\n\n"
+                    f"Digita en la página inicial de Datasoft http://172.17.21.14/Datasoft/login.php los campos: Usuario, "
+                    f"compañía, sin darle Clave y código de seguridad y luego das clic en Restablecer Contraseña.\n"
+                    f"IMPORTANTE: Se debe ingresar al sistema antes de 24 horas para Activar el Usuario y evitar que se vuelva a "
+                    f"inactivar. Tener en cuenta al cambiar la contraseña:\n"
+                    f"• Longitud mínima 8 caracteres\n"
+                    f"• Longitud máxima 12 caracteres\n"
+                    f"• Debe contener como mínimo (2) dos letras\n"
+                    f"• Debe contener como mínimo (2) dos números\n"
+                    f"• Debe contener como mínimo (2) dos caracteres especiales de la siguiente lista: $ - _ =\n"
+                    f"• No se pueden repetir contraseñas anteriores.\n"
+                    f"• No usar el asterisco * (asterisco)\n\n"
+                    f"Saludos,"
+                )
+                try:
+                    textarea_selector = 'textarea[data-testid="304247080"], textarea[name="ar304247080"]'
+                    loc = frame.locator(textarea_selector).first if frame else page.locator(textarea_selector).first
+                    loc.wait_for(state="visible", timeout=10000)
+                    loc.fill(mensaje_creacion)
+                    btn_selector = 'button[name="ar304268430"], button[id="304268430"], button[title="Publicación"]'
+                    btn_loc = frame.locator(btn_selector).first if frame else page.locator(btn_selector).first
+                    btn_loc.wait_for(state="visible", timeout=5000)
+                    btn_loc.click()
+                    print("Nota de creación publicada en Helix.")
+                    page.wait_for_timeout(2000)
+                    btn_asignar_sel = 'button[name="ar304421551"], button[id="304421551"], button[title="Asignarme a mí"]'
+                    btn_asignar_loc = frame.locator(btn_asignar_sel).first if frame else page.locator(btn_asignar_sel).first
+                    btn_asignar_loc.wait_for(state="visible", timeout=10000)
+                    btn_asignar_loc.click()
+                    page.wait_for_timeout(2000)
+                    btn_editar_sel = 'button[name="ar304420591"], button[title="Editar"]'
+                    btn_editar_loc = frame.locator(btn_editar_sel).first if frame else page.locator(btn_editar_sel).first
+                    btn_editar_loc.wait_for(state="visible", timeout=10000)
+                    btn_editar_loc.click()
+                    page.wait_for_timeout(1000)
+                    estado_sel = 'button[name="ar7"], button[aria-label="Estado"]'
+                    estado_loc = frame.locator(estado_sel).first if frame else page.locator(estado_sel).first
+                    estado_loc.wait_for(state="visible", timeout=10000)
+                    estado_loc.click()
+                    page.wait_for_timeout(1000)
+                    finalizado_sel = (
+                        'button.rx-select__option:has-text("Finalizado"), '
+                        'button[role="option"]:has-text("Finalizado"), '
+                        'button.rx-select__option:has-text("Completed"), '
+                        'button[role="option"]:has-text("Completed")'
+                    )
+                    finalizado_loc = frame.locator(finalizado_sel).first if frame else page.locator(finalizado_sel).first
+                    finalizado_loc.wait_for(state="visible", timeout=5000)
+                    finalizado_loc.click()
+                    page.wait_for_timeout(1000)
+                    guardar_sel = 'button[name="ar304440891"], button[title="Guardar ticket"]'
+                    guardar_loc = frame.locator(guardar_sel).first if frame else page.locator(guardar_sel).first
+                    guardar_loc.wait_for(state="visible", timeout=5000)
+                    guardar_loc.click()
+                    print("Ticket de creación finalizado y guardado.")
+                except Exception as e:
+                    print(f"Aviso: Error al finalizar ticket de creación: {e}")
+                if page:
+                    generar_informe_glpi(page, datos_extraidos, nuevo_login, cedula, "Finalizado", "CREACION USUARIO BANCO")
     except Exception as e:
         print(f"Error en la consulta: {e}")
 
@@ -522,7 +888,7 @@ def login_smartit():
     # Configurar el navegador
     browser.configure(
         browser_engine="chromium",
-        headless=False, # Necesitamos ver el navegador
+        headless=True, # Necesitamos ver el navegador
         isolated=False,  # Modo Incógnito / Contexto limpio
     )
     
