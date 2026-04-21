@@ -575,8 +575,13 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                                   f"VALUES ('{cmpn}', '{esor}', '{login_existente}', '{nombre_completo}')")
                         ejecutar_actualizacion_db(q_autr, conn)
                         q_serie = (f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
-                                   f"SELECT AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, '{login_existente}', '{nombre_completo}' "
-                                   f"FROM autorizado_serie WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'")
+                                   f"SELECT a.AUSR_CMPN_CODIGO, a.AUSR_ESOR_CODIGO, a.AUSR_SRDC_CODIGO, a.AUSR_DCMT_CODIGO, '{login_existente}', '{nombre_completo}' "
+                                   f"FROM autorizado_serie WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'"
+                                   f"AND NOT EXISTS (SELECT 1 FROM autorizado_serie b WHERE b.AUSR_CMPN_CODIGO = a.AUSR_CMPN_CODIGO "
+                                   f"AND b.AUSR_ESOR_CODIGO = a.AUSR_ESOR_CODIGO "
+                                   f"AND b.AUSR_SRDC_CODIGO = a.AUSR_SRDC_CODIGO "
+                                   f"AND b.AUSR_DCMT_CODIGO = a.AUSR_DCMT_CODIGO "
+                                   f"AND b.AUSR_AUTR_CODIGO = '{login_existente}')")
                         ejecutar_actualizacion_db(q_serie, conn)
                     print("Autorizaciones añadidas exitosamente.")
 
@@ -661,8 +666,13 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                 # 3. INSERT autorizado_serie (copia masiva)
                 q_serie = (
                     f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
-                    f"SELECT AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, '{nuevo_login}', '{nombre_completo}' "
-                    f"FROM autorizado_serie WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'"
+                    f"SELECT a.AUSR_CMPN_CODIGO, a.AUSR_ESOR_CODIGO, a.AUSR_SRDC_CODIGO, a.AUSR_DCMT_CODIGO, '{nuevo_login}', '{nombre_completo}' "
+                    f"FROM autorizado_serie a WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'"
+                    f"AND NOT EXISTS (SELECT 1 FROM autorizado_serie b WHERE b.AUSR_CMPN_CODIGO = a.AUSR_CMPN_CODIGO "
+                    f"AND b.AUSR_ESOR_CODIGO = a.AUSR_ESOR_CODIGO "
+                    f"AND b.AUSR_SRDC_CODIGO = a.AUSR_SRDC_CODIGO "
+                    f"AND b.AUSR_DCMT_CODIGO = a.AUSR_DCMT_CODIGO "
+                    f"AND b.AUSR_AUTR_CODIGO = '{nuevo_login}')"
                 )
                 exito_serie = ejecutar_actualizacion_db(q_serie, conn)
                 if exito_serie:
