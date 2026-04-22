@@ -788,11 +788,15 @@ def contar_items(page, conn=None):
     print(f"hay items: {count} item(s) encontrado(s)")
 
     # Obtener detalle de todos los ítems encontrados
-    for i in range(1, count + 1):
-        obtener_detalle_item(page, item_index=i, conn=conn)
+    # IMPORTANTE: siempre hacemos clic en el ítem en posición 1, porque al procesar
+    # y finalizar/rechazar un ticket, este desaparece de la lista y el siguiente
+    # sube a ocupar su lugar. Usar un índice fijo (2, 3...) causaría un error.
+    for i in range(count):
+        print(f"Procesando ítem {i + 1} de {count} (siempre se toma el primero de la lista)...")
+        obtener_detalle_item(page, item_index=1, conn=conn)
         
         # Si no es el último ítem, volver a la consola de tickets para poder abrir el siguiente
-        if i < count:
+        if i < count - 1:
             print("Regresando a la consola de tickets...")
             page.go_back()
             # Esperar a que recargue la tabla original antes de buscar el siguiente
@@ -898,7 +902,7 @@ def login_smartit():
     # Configurar el navegador
     browser.configure(
         browser_engine="chromium",
-        headless=True, # Necesitamos ver el navegador
+        headless=False, # Necesitamos ver el navegador
         isolated=False,  # Modo Incógnito / Contexto limpio
     )
     
