@@ -6,6 +6,8 @@ from tkinter import simpledialog
 import oracledb
 import subprocess
 import tempfile
+import glob
+import openpyxl
 
 def conectar_bd():
     print("\n=== Conectando a Base de Datos Oracle (Modo Grueso) ===")
@@ -106,7 +108,7 @@ def generar_login(nombre_completo, conn):
         login = base + str(sufijo)
         sufijo += 1
 
-def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, password_generado=None, estado_helix=None, titulo_glpi="ACTIVACION USUARIO BANCO"):
+def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, password_generado=None, estado_helix=None, titulo_glpi="ACTIVACION USUARIO BANCO", id_ticket=None):
     print("\n=== Iniciando creación de ticket en GLPI ===")
     try:
         context = page.context
@@ -189,7 +191,10 @@ def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, passwo
         body_locator.wait_for(state="visible", timeout=10000)
         
         # Construir la descripción de manera dinámica
-        descripcion_glpi = "Buen día,\nMe colaboran gestionando este ticket del Helix para activación de usuario de Bancolombia.\nadjunto evidencia:\n\n"
+        descripcion_glpi = f"Buen día,\nMe colaboran gestionando este ticket del Helix ({id_ticket if id_ticket else ''}) para activación de usuario de Bancolombia.\nadjunto evidencia:\n\n"
+        
+        if id_ticket:
+            descripcion_glpi += f"ID Item Helix: {id_ticket}\n"
         
         if estado_helix:
             descripcion_glpi += f"Estado fijado en Helix: {estado_helix}\n\n"
@@ -226,7 +231,517 @@ def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, passwo
         except:
             pass
 
-def validar_datos_condicionales(datos_extraidos, conn, page=None, frame=None):
+def descargar_adjunto_excel(page, frame):
+    """
+    Descarga el archivo Excel adjunto del ticket en Helix.
+    Busca el enlace del adjunto dentro del iframe del ticket,
+    hace clic para descargarlo y retorna la ruta del archivo descargado.
+    """
+    print("\n=== Descargando Excel adjunto del ticket ===")
+    try:
+        # Buscar el enlace del archivo adjunto dentro del frame
+        # Los adjuntos en Helix suelen estar en un área de attachments
+        adjunto_selector = (
+            'a[href*=".xlsx"], a[href*=".xls"], '
+            'a[title*=".xlsx"], a[title*=".xls"], '
+            'span:has-text(".xlsx"), span:has-text(".xls"), '
+            'button:has-text(".xlsx"), button:has-text(".xls")'
+        )
+        
+        # Intentar primero en el frame, luego en la página
+        loc = frame.locator(adjunto_selector).first if frame else page.locator(adjunto_selector).first
+        
+        # Si no se encuentra con selectores genéricos, buscar por el ícono de adjunto
+        try:
+            loc.wait_for(state="visible", timeout=5000)
+        except:
+            print("Buscando adjunto con selectores alternativos...")
+            alt_selector = (
+                '[class*="attachment"] a, '
+                '[class*="Attachment"] a, '
+                '[id*="attachment"] a, '
+                'a[class*="file"], '
+                'img[class*="attachment-icon"]'
+            )
+            loc = frame.locator(alt_selector).first if frame else page.locator(alt_selector).first
+            loc.wait_for(state="visible", timeout=10000)
+        
+        # Configurar directorio de descarga temporal
+        download_dir = os.path.join(tempfile.gettempdir(), "rpa_helix_downloads")
+        os.makedirs(download_dir, exist_ok=True)
+        
+        # Iniciar la descarga haciendo clic
+        with page.expect_download(timeout=30000) as download_info:
+            loc.click()
+        
+        download = download_info.value
+        archivo_descargado = os.path.join(download_dir, download.suggested_filename)
+        download.save_as(archivo_descargado)
+        
+        print(f"Archivo descargado: {archivo_descargado}")
+        return archivo_descargado
+        
+    except Exception as e:
+        print(f"Error al descargar el adjunto Excel: {e}")
+        # Fallback: buscar si ya hay un archivo Excel reciente en la carpeta de descargas del usuario
+        downloads_path = os.path.join(os.path.expanduser("~"), "Downloads")
+        archivos_excel = glob.glob(os.path.join(downloads_path, "Planilla*.xlsx"))
+        if archivos_excel:
+            mas_reciente = max(archivos_excel, key=os.path.getmtime)
+            print(f"Fallback: Usando archivo más reciente encontrado: {mas_reciente}")
+            return mas_reciente
+        return None
+
+def leer_excel_masivo(ruta_archivo):
+    """
+    Lee el archivo Excel de solicitud masiva.
+    Formato esperado:
+      Fila 12: Encabezados (CEDULA, NOMBRE, CARGO, ÁREA, CORREO ELECTRONICO, USUARIO REFERENCIA)
+      Columnas: B=Cédula, C=Nombre, D=Cargo, E=Área, F=Correo, G=Usuario referencia
+      Desde fila 13 en adelante: datos de usuarios
+    Retorna una lista de diccionarios con los datos de cada usuario.
+    """
+    print(f"\n=== Leyendo Excel masivo: {ruta_archivo} ===")
+    usuarios = []
+    
+    try:
+        wb = openpyxl.load_workbook(ruta_archivo, read_only=True, data_only=True)
+        ws = wb.active  # Tomar la primera hoja
+        
+        # Verificar encabezados en fila 12
+        encabezados = {
+            'B': ws['B12'].value,
+            'C': ws['C12'].value,
+            'D': ws['D12'].value,
+            'E': ws['E12'].value,
+            'F': ws['F12'].value,
+            'G': ws['G12'].value,
+        }
+        print(f"Encabezados detectados: {encabezados}")
+        
+        # Leer datos desde fila 13 en adelante
+        fila = 13
+        while True:
+            cedula = ws[f'B{fila}'].value
+            
+            # Si la cédula está vacía, terminamos de leer
+            if cedula is None or str(cedula).strip() == "":
+                break
+            
+            nombre = ws[f'C{fila}'].value or ""
+            correo = ws[f'F{fila}'].value or ""
+            usuario_ref = ws[f'G{fila}'].value or ""
+            
+            usuario = {
+                "cedula": str(cedula).strip(),
+                "nombre": str(nombre).strip(),
+                "correo": str(correo).strip(),
+                "usuario_referencia": str(usuario_ref).strip(),
+            }
+            usuarios.append(usuario)
+            fila += 1
+        
+        wb.close()
+        print(f"Se leyeron {len(usuarios)} usuario(s) del Excel.")
+        
+    except Exception as e:
+        print(f"Error al leer el Excel: {e}")
+    
+    return usuarios
+
+def validar_fila_activacion(cedula, usuario_ref, conn):
+    """
+    Aplica la lógica de activación/desbloqueo para un usuario individual.
+    En masiva, usuario_ref es el login del propio usuario a activar.
+    Se busca primero por ese login y luego por cédula.
+    Retorna un dict con el resultado: {exito: bool, login: str, mensaje: str}
+    """
+    print(f"\n  >> Validando activación para cédula: {cedula}, usuario: {usuario_ref}")
+    
+    existe = False
+    login_final = usuario_ref
+    
+    # 1. Buscar primero por el login del usuario (columna G = login del propio usuario)
+    if usuario_ref:
+        res = ejecutar_consulta_db(
+            f"SELECT COUNT(*) FROM a_usuario WHERE LOGIN = '{usuario_ref}'", conn
+        )
+        if res and res.strip() != "0":
+            existe = True
+            print(f"  Usuario encontrado por login: {login_final}")
+    
+    # 2. Si no se encontró por login, buscar por cédula
+    if not existe and cedula:
+        res_login = ejecutar_consulta_db(
+            f"SELECT LOGIN FROM a_usuario WHERE NO_IDENTIFICACION = '{cedula}'", conn
+        )
+        if res_login and res_login.strip() not in ("0", ""):
+            existe = True
+            login_final = res_login.strip()
+            print(f"  Usuario encontrado por cédula. LOGIN en BD: {login_final}")
+    
+    if existe and login_final:
+        update_query = (
+            f"UPDATE a_usuario SET CONTRASENA = NO_IDENTIFICACION, ESTADO = 'A', "
+            f"CAMBIO_CONTRASENA = 'S' WHERE LOGIN = '{login_final}'"
+        )
+        exito = ejecutar_actualizacion_db(update_query, conn)
+        
+        if exito:
+            print(f"  Activación exitosa para {login_final}")
+            return {
+                "exito": True,
+                "login": login_final,
+                "mensaje": f"Cédula {cedula} - Usuario {login_final} - Contraseña {cedula}: Activado exitosamente."
+            }
+        else:
+            return {
+                "exito": False,
+                "login": login_final,
+                "mensaje": f"Cédula {cedula} - Usuario {login_final}: Error al actualizar."
+            }
+    else:
+        print(f"  Usuario con cédula {cedula} / login {usuario_ref} no existe en BD.")
+        return {
+            "exito": False,
+            "login": None,
+            "mensaje": f"Cédula {cedula} - Usuario {usuario_ref}: No existe el usuario. Requiere creación."
+        }
+
+def validar_fila_creacion(cedula, nombre_completo, email_usuario, usuario_ref, conn):
+    """
+    Aplica la lógica de creación para un usuario individual (masivo).
+    Retorna un dict con el resultado: {exito: bool, login: str, mensaje: str}
+    """
+    print(f"\n  >> Validando creación para cédula: {cedula}, nombre: {nombre_completo}")
+    
+    # 1. Validar que el usuario de referencia exista
+    ref_fila = ejecutar_consulta_fila_db(
+        f"SELECT LOGIN, CMPN_CODIGO, ESOR_CODIGO, NOMBRE_USUARIO FROM a_usuario WHERE LOGIN = '{usuario_ref}'",
+        conn
+    )
+    if not ref_fila:
+        print(f"  Usuario de referencia '{usuario_ref}' no existe.")
+        return {
+            "exito": False,
+            "login": None,
+            "mensaje": f"Usuario de referencia '{usuario_ref}' no existe."
+        }
+    
+    ref_cmpn = ref_fila.get("CMPN_CODIGO", "BANCOLOMBI")
+    ref_esor = ref_fila.get("ESOR_CODIGO", "PIC")
+    
+    # 2. Verificar si usuario ya existe por cédula
+    login_existente = ejecutar_consulta_db(
+        f"SELECT LOGIN FROM a_usuario WHERE NO_IDENTIFICACION = '{cedula}'", conn
+    )
+    usuario_ya_existe = login_existente and login_existente.strip() not in ("0", "")
+    
+    # Para masiva usamos la línea del usuario de referencia
+    lineas_requeridas = [(ref_cmpn, ref_esor)]
+    
+    if usuario_ya_existe:
+        login_existente = login_existente.strip()
+        print(f"  Usuario ya existe: {login_existente}. Verificando autorizaciones...")
+        
+        # Verificar qué líneas ya tiene en AUTORIZADO
+        lineas_faltantes = []
+        for cmpn, esor in lineas_requeridas:
+            res_autr = ejecutar_consulta_db(
+                f"SELECT COUNT(*) FROM AUTORIZADO WHERE AUTR_CODIGO = '{login_existente}' AND AUTR_CMPN_CODIGO = '{cmpn}'",
+                conn
+            )
+            if res_autr and res_autr.strip() == "0":
+                lineas_faltantes.append((cmpn, esor))
+        
+        if not lineas_faltantes:
+            print(f"  El usuario {login_existente} ya tiene todas las autorizaciones.")
+            return {
+                "exito": False,
+                "login": login_existente,
+                "mensaje": f"Cédula {cedula} - Usuario {login_existente}: Ya existe con todas las autorizaciones."
+            }
+        else:
+            # Añadir autorizaciones faltantes
+            print(f"  Añadiendo {len(lineas_faltantes)} autorización(es) faltante(s)...")
+            for cmpn, esor in lineas_faltantes:
+                q_autr = (
+                    f"INSERT INTO AUTORIZADO (AUTR_CMPN_CODIGO, AUTR_ESOR_CODIGO, AUTR_CODIGO, AUTR_NOMBRE) "
+                    f"VALUES ('{cmpn}', '{esor}', '{login_existente}', '{nombre_completo}')"
+                )
+                ejecutar_actualizacion_db(q_autr, conn)
+                q_serie = (
+                    f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
+                    f"SELECT a.AUSR_CMPN_CODIGO, a.AUSR_ESOR_CODIGO, a.AUSR_SRDC_CODIGO, a.AUSR_DCMT_CODIGO, '{login_existente}', '{nombre_completo}' "
+                    f"FROM autorizado_serie a WHERE a.AUSR_AUTR_CODIGO = '{usuario_ref}' "
+                    f"AND NOT EXISTS (SELECT 1 FROM autorizado_serie b WHERE b.AUSR_CMPN_CODIGO = a.AUSR_CMPN_CODIGO "
+                    f"AND b.AUSR_ESOR_CODIGO = a.AUSR_ESOR_CODIGO "
+                    f"AND b.AUSR_SRDC_CODIGO = a.AUSR_SRDC_CODIGO "
+                    f"AND b.AUSR_DCMT_CODIGO = a.AUSR_DCMT_CODIGO "
+                    f"AND b.AUSR_AUTR_CODIGO = '{login_existente}')"
+                )
+                ejecutar_actualizacion_db(q_serie, conn)
+            
+            return {
+                "exito": True,
+                "login": login_existente,
+                "mensaje": f"Cédula {cedula} - Usuario {login_existente}: Autorizaciones añadidas exitosamente."
+            }
+    else:
+        # Usuario no existe → Creación completa
+        print(f"  Usuario no existe. Creando...")
+        nuevo_login = generar_login(nombre_completo, conn)
+        print(f"  LOGIN generado: {nuevo_login}")
+        
+        # 1. INSERT a_usuario
+        q_usuario = (
+            f"INSERT INTO a_usuario (ID_USUARIO, LOGIN, CONTRASENA, ID_GRUPO_USUARIO, NOMBRE_USUARIO, "
+            f"ESTADO, LOGIN_USUARIO, FECHA_ULTIMA_ACT, CMPN_CODIGO, ESOR_CODIGO, E_MAIL, "
+            f"TIPO_USUARIO, CAMBIO_CONTRASENA, FECHA_CAMBIO_CONTRASENA, NO_INTENTOS, "
+            f"RESTABLECE_CONTRASENA, NO_IDENTIFICACION, FECHA_CREACION) "
+            f"VALUES (seq_a_usuario.nextval, '{nuevo_login}', '{cedula}', 462, "
+            f"'{nombre_completo}', 'A', 'SPINE', SYSDATE, '{ref_cmpn}', '{ref_esor}', "
+            f"'{email_usuario}', 'E', 'N', SYSDATE, 0, 'S', '{cedula}', SYSDATE)"
+        )
+        exito_usuario = ejecutar_actualizacion_db(q_usuario, conn)
+        if not exito_usuario:
+            return {
+                "exito": False,
+                "login": None,
+                "mensaje": f"Cédula {cedula}: Error al crear usuario ."
+            }
+        
+        # 2. INSERT AUTORIZADO
+        for cmpn, esor in lineas_requeridas:
+            q_autr = (
+                f"INSERT INTO AUTORIZADO (AUTR_CMPN_CODIGO, AUTR_ESOR_CODIGO, AUTR_CODIGO, AUTR_NOMBRE) "
+                f"VALUES ('{cmpn}', '{esor}', '{nuevo_login}', '{nombre_completo}')"
+            )
+            ejecutar_actualizacion_db(q_autr, conn)
+        
+        # 3. INSERT autorizado_serie (copia masiva)
+        q_serie = (
+            f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
+            f"SELECT a.AUSR_CMPN_CODIGO, a.AUSR_ESOR_CODIGO, a.AUSR_SRDC_CODIGO, a.AUSR_DCMT_CODIGO, '{nuevo_login}', '{nombre_completo}' "
+            f"FROM autorizado_serie a WHERE a.AUSR_AUTR_CODIGO = '{usuario_ref}' "
+            f"AND NOT EXISTS (SELECT 1 FROM autorizado_serie b WHERE b.AUSR_CMPN_CODIGO = a.AUSR_CMPN_CODIGO "
+            f"AND b.AUSR_ESOR_CODIGO = a.AUSR_ESOR_CODIGO "
+            f"AND b.AUSR_SRDC_CODIGO = a.AUSR_SRDC_CODIGO "
+            f"AND b.AUSR_DCMT_CODIGO = a.AUSR_DCMT_CODIGO "
+            f"AND b.AUSR_AUTR_CODIGO = '{nuevo_login}')"
+        )
+        ejecutar_actualizacion_db(q_serie, conn)
+        
+        return {
+            "exito": True,
+            "login": nuevo_login,
+            "mensaje": f"Cédula {cedula} - Usuario {nuevo_login}: Creado exitosamente. Contraseña: {cedula}"
+        }
+
+def procesar_masiva(datos_extraidos, conn, page, frame, tipo_solicitud, id_ticket=None):
+    """
+    Procesa una solicitud masiva:
+    1. Descarga el Excel adjunto del ticket
+    2. Lee las filas (desde fila 13: B=Cédula, C=Nombre, F=Correo, G=Usuario ref)
+    3. Aplica las validaciones de creación o activación por cada fila
+    4. Publica un resumen consolidado en el ticket y lo finaliza
+    """
+    print("\n========================================")
+    print("  PROCESAMIENTO MASIVO INICIADO")
+    print("========================================")
+    
+    # 1. Descargar el Excel adjunto
+    ruta_excel = descargar_adjunto_excel(page, frame)
+    if not ruta_excel or not os.path.exists(ruta_excel):
+        print("Error: No se pudo obtener el archivo Excel adjunto.")
+        # Publicar nota de error y rechazar
+        msg_error = ("Buen día.\nNo fue posible descargar o localizar el archivo Excel adjunto al ticket.\n"
+                      "Por favor, verifique que el archivo esté adjunto correctamente y genere un nuevo requerimiento.")
+        try:
+            textarea_selector = 'textarea[data-testid="304247080"], textarea[name="ar304247080"]'
+            loc = frame.locator(textarea_selector).first if frame else page.locator(textarea_selector).first
+            loc.wait_for(state="visible", timeout=10000)
+            loc.fill(msg_error)
+            btn_selector = 'button[name="ar304268430"], button[id="304268430"], button[title="Publicación"]'
+            btn_loc = frame.locator(btn_selector).first if frame else page.locator(btn_selector).first
+            btn_loc.wait_for(state="visible", timeout=5000)
+            btn_loc.click()
+            page.wait_for_timeout(2000)
+        except Exception as e:
+            print(f"Aviso: Error al publicar nota de fallo en descarga: {e}")
+        return
+    
+    # 2. Leer datos del Excel
+    usuarios = leer_excel_masivo(ruta_excel)
+    if not usuarios:
+        print("Error: El Excel no contiene datos de usuarios.")
+        msg_vacio = ("Buen día.\nEl archivo Excel adjunto no contiene datos de usuarios a partir de la fila 13.\n"
+                      "Por favor, verifique el formato del archivo y genere un nuevo requerimiento.")
+        try:
+            textarea_selector = 'textarea[data-testid="304247080"], textarea[name="ar304247080"]'
+            loc = frame.locator(textarea_selector).first if frame else page.locator(textarea_selector).first
+            loc.wait_for(state="visible", timeout=10000)
+            loc.fill(msg_vacio)
+            btn_selector = 'button[name="ar304268430"], button[id="304268430"], button[title="Publicación"]'
+            btn_loc = frame.locator(btn_selector).first if frame else page.locator(btn_selector).first
+            btn_loc.wait_for(state="visible", timeout=5000)
+            btn_loc.click()
+            page.wait_for_timeout(2000)
+        except Exception as e:
+            print(f"Aviso: Error al publicar nota de Excel vacío: {e}")
+        return
+    
+    # 3. Procesar cada fila según el tipo de solicitud
+    resultados = []
+    exitosos = 0
+    fallidos = 0
+    
+    es_activacion = tipo_solicitud == "Activación/desbloqueo"
+    es_creacion = "Creación" in tipo_solicitud or "Creacion" in tipo_solicitud
+    
+    for idx, usuario in enumerate(usuarios, start=1):
+        print(f"\n--- Procesando usuario {idx}/{len(usuarios)} ---")
+        cedula = usuario["cedula"]
+        nombre = usuario["nombre"]
+        correo = usuario["correo"]
+        usuario_ref = usuario["usuario_referencia"]
+        
+        if es_activacion:
+            resultado = validar_fila_activacion(cedula, usuario_ref, conn)
+        elif es_creacion:
+            resultado = validar_fila_creacion(cedula, nombre, correo, usuario_ref, conn)
+        else:
+            # Si el tipo no es claro, intentar activación primero
+            print(f"  Tipo de solicitud no reconocido: '{tipo_solicitud}'. Intentando activación...")
+            resultado = validar_fila_activacion(cedula, usuario_ref, conn)
+        
+        resultados.append(resultado)
+        if resultado["exito"]:
+            exitosos += 1
+        else:
+            fallidos += 1
+    
+    # 4. Construir resumen consolidado
+    print("\n========================================")
+    print("  RESUMEN DEL PROCESAMIENTO MASIVO")
+    print(f"  Total: {len(usuarios)} | Exitosos: {exitosos} | Fallidos: {fallidos}")
+    print("========================================")
+    
+    tipo_texto = "ACTIVACIÓN" if es_activacion else "CREACIÓN"
+    resumen = f"PROCESAMIENTO MASIVO DE {tipo_texto}\n\n"
+    resumen += "DETALLE POR USUARIO:\n"
+    resumen += "-" * 50 + "\n"
+    
+    for idx, resultado in enumerate(resultados, start=1):
+        resumen += f"{idx}. {resultado['mensaje']}\n"
+    
+    resumen += "-" * 50 + "\n"
+    
+    if es_activacion and exitosos > 0:
+        resumen += "\nINSTRUCCIONES PARA LOS USUARIOS ACTIVADOS:\n"
+        resumen += "Digita en la página inicial de Datasoft http://172.17.21.14/Datasoft/login.php los campos: Usuario, "
+        resumen += "compañía, sin darle Clave y código de seguridad y luego das clic en Restablecer Contraseña.\n"
+        resumen += "IMPORTANTE: Se debe ingresar al sistema antes de 24 horas para Activar el Usuario.\n"
+        resumen += "Tener en cuenta al cambiar la contraseña:\n"
+        resumen += "• Longitud mínima 8 caracteres\n"
+        resumen += "• Longitud máxima 12 caracteres\n"
+        resumen += "• Debe contener como mínimo (2) dos letras\n"
+        resumen += "• Debe contener como mínimo (2) dos números\n"
+        resumen += "• Debe contener como mínimo (2) dos caracteres especiales de la siguiente lista: $ - _ =\n"
+        resumen += "• No se pueden repetir contraseñas anteriores.\n"
+        resumen += "• No usar el asterisco * (asterisco)\n"
+    
+    if es_creacion and exitosos > 0:
+        resumen += "\nINSTRUCCIONES PARA LOS USUARIOS CREADOS:\n"
+        resumen += "POR FAVOR LEER MUY DESPACIO Y SEGUIR EL PASO A PASO CON LAS INSTRUCCIONES QUE SE DETALLAN A CONTINUACIÓN\n\n"
+        resumen += "Digita en la página inicial de Datasoft http://172.17.21.14/Datasoft/login.php los campos: Usuario, "
+        resumen += "compañía, sin darle Clave y código de seguridad y luego das clic en Restablecer Contraseña.\n"
+        resumen += "IMPORTANTE: Se debe ingresar al sistema antes de 24 horas para Activar el Usuario.\n"
+        resumen += "Tener en cuenta al cambiar la contraseña:\n"
+        resumen += "• Longitud mínima 8 caracteres\n"
+        resumen += "• Longitud máxima 12 caracteres\n"
+        resumen += "• Debe contener como mínimo (2) dos letras\n"
+        resumen += "• Debe contener como mínimo (2) dos números\n"
+        resumen += "• Debe contener como mínimo (2) dos caracteres especiales de la siguiente lista: $ - _ =\n"
+        resumen += "• No se pueden repetir contraseñas anteriores.\n"
+        resumen += "• No usar el asterisco * (asterisco)\n"
+    
+    resumen += "\nSaludos,"
+    
+    # 5. Publicar resumen en el ticket de Helix
+    try:
+        textarea_selector = 'textarea[data-testid="304247080"], textarea[name="ar304247080"]'
+        loc = frame.locator(textarea_selector).first if frame else page.locator(textarea_selector).first
+        loc.wait_for(state="visible", timeout=10000)
+        loc.fill(resumen)
+        
+        # Clic en "Publicación"
+        btn_selector = 'button[name="ar304268430"], button[id="304268430"], button[title="Publicación"]'
+        btn_loc = frame.locator(btn_selector).first if frame else page.locator(btn_selector).first
+        btn_loc.wait_for(state="visible", timeout=5000)
+        btn_loc.click()
+        print("Resumen masivo publicado en el ticket.")
+        
+        # Asignarme a mí
+        page.wait_for_timeout(2000)
+        btn_asignar_sel = 'button[name="ar304421551"], button[id="304421551"], button[title="Asignarme a mí"]'
+        btn_asignar_loc = frame.locator(btn_asignar_sel).first if frame else page.locator(btn_asignar_sel).first
+        btn_asignar_loc.wait_for(state="visible", timeout=10000)
+        btn_asignar_loc.click()
+        print("Ticket asignado correctamente.")
+        
+        # Editar → Cambiar estado
+        page.wait_for_timeout(2000)
+        btn_editar_sel = 'button[name="ar304420591"], button[title="Editar"]'
+        btn_editar_loc = frame.locator(btn_editar_sel).first if frame else page.locator(btn_editar_sel).first
+        btn_editar_loc.wait_for(state="visible", timeout=10000)
+        btn_editar_loc.click()
+        
+        page.wait_for_timeout(1000)
+        estado_sel = 'button[name="ar7"], button[aria-label="Estado"]'
+        estado_loc = frame.locator(estado_sel).first if frame else page.locator(estado_sel).first
+        estado_loc.wait_for(state="visible", timeout=10000)
+        estado_loc.click()
+        
+        # Si hubo fallos, marcar como Finalizado igualmente (el detalle queda en la nota)
+        page.wait_for_timeout(1000)
+        finalizado_sel = (
+            'button.rx-select__option:has-text("Finalizado"), '
+            'button[role="option"]:has-text("Finalizado"), '
+            'button.rx-select__option:has-text("Completed"), '
+            'button[role="option"]:has-text("Completed")'
+        )
+        finalizado_loc = frame.locator(finalizado_sel).first if frame else page.locator(finalizado_sel).first
+        finalizado_loc.wait_for(state="visible", timeout=10000)
+        finalizado_loc.click()
+        
+        page.wait_for_timeout(1000)
+        guardar_sel = 'button[name="ar304440891"], button[title="Guardar ticket"]'
+        guardar_loc = frame.locator(guardar_sel).first if frame else page.locator(guardar_sel).first
+        guardar_loc.wait_for(state="visible", timeout=5000)
+        guardar_loc.click()
+        print("Ticket masivo finalizado y guardado exitosamente.")
+    except Exception as e:
+        print(f"Aviso: Error al publicar resumen o finalizar ticket masivo: {e}")
+    
+    # 6. Generar informe en GLPI
+    if page:
+        titulo_glpi = f"{tipo_texto} USUARIO BANCO - MASIVO ({exitosos}/{len(usuarios)} exitosos)"
+        generar_informe_glpi(page, datos_extraidos, None, None, "Finalizado", titulo_glpi, id_ticket=id_ticket)
+    
+    # 7. Limpiar archivo temporal
+    try:
+        if ruta_excel and os.path.exists(ruta_excel) and tempfile.gettempdir() in ruta_excel:
+            os.remove(ruta_excel)
+            print("Archivo temporal eliminado.")
+    except:
+        pass
+    
+    print("\n========================================")
+    print("  PROCESAMIENTO MASIVO COMPLETADO")
+    print("========================================")
+
+def validar_datos_condicionales(datos_extraidos, conn, page=None, frame=None, id_ticket=None):
     print("\n--- Validando en Base de Datos vía Terminal ---")
 
     info_servicio = datos_extraidos.get("Información del servicio", "").lower()
@@ -235,7 +750,8 @@ def validar_datos_condicionales(datos_extraidos, conn, page=None, frame=None):
     cedula = datos_extraidos.get("No. Cédula", "")
 
     if "masiva" in info_servicio:
-        print("(Solicitud masiva omitida)")
+        print("Solicitud masiva detectada. Procesando desde Excel adjunto...")
+        procesar_masiva(datos_extraidos, conn, page, frame, tipo_solicitud, id_ticket=id_ticket)
         return
 
     try:
@@ -422,7 +938,7 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                 login_a_enviar = login_final if existe else None
                 pass_a_enviar = cedula if existe else None
                 estado_h = "Finalizado" if existe else "Rechazado"
-                generar_informe_glpi(page, datos_extraidos, login_a_enviar, pass_a_enviar, estado_h)
+                generar_informe_glpi(page, datos_extraidos, login_a_enviar, pass_a_enviar, estado_h, id_ticket=id_ticket)
                 
         elif "Creación" in tipo_solicitud or "Creacion" in tipo_solicitud:
             print(f"Validando creacion de '{cedula}'...")
@@ -485,7 +1001,7 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                 except Exception as e:
                     print(f"Aviso: Error al rechazar ticket por ref inexistente: {e}")
                 if page:
-                    generar_informe_glpi(page, datos_extraidos, None, None, "Rechazado", "CREACION USUARIO BANCO")
+                    generar_informe_glpi(page, datos_extraidos, None, None, "Rechazado", "CREACION USUARIO BANCO", id_ticket=id_ticket)
                 return
 
             ref_cmpn = ref_fila.get("CMPN_CODIGO", "BANCOLOMBI")
@@ -563,7 +1079,7 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                     except Exception as e:
                         print(f"Aviso: Error al rechazar ticket (Escenario B1): {e}")
                     if page:
-                        generar_informe_glpi(page, datos_extraidos, None, None, "Rechazado", "CREACION USUARIO BANCO")
+                        generar_informe_glpi(page, datos_extraidos, None, None, "Rechazado", "CREACION USUARIO BANCO", id_ticket=id_ticket)
                     return
 
                 else:
@@ -631,7 +1147,7 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                     except Exception as e:
                         print(f"Aviso: Error al finalizar ticket (Escenario B2): {e}")
                     if page:
-                        generar_informe_glpi(page, datos_extraidos, login_existente, cedula, "Finalizado", "CREACION USUARIO BANCO")
+                        generar_informe_glpi(page, datos_extraidos, login_existente, cedula, "Finalizado", "CREACION USUARIO BANCO", id_ticket=id_ticket)
                     return
 
             else:
@@ -743,7 +1259,7 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                 except Exception as e:
                     print(f"Aviso: Error al finalizar ticket de creación: {e}")
                 if page:
-                    generar_informe_glpi(page, datos_extraidos, nuevo_login, cedula, "Finalizado", "CREACION USUARIO BANCO")
+                    generar_informe_glpi(page, datos_extraidos, nuevo_login, cedula, "Finalizado", "CREACION USUARIO BANCO", id_ticket=id_ticket)
     except Exception as e:
         print(f"Error en la consulta: {e}")
 
@@ -811,6 +1327,16 @@ def obtener_detalle_item(page, item_index=1, conn=None):
     """
     print(f"\n=== Extrayendo detalle del ítem #{item_index} ===")
     try:
+        # 0. Extraer el ID del ticket (que empieza por WO) antes de entrar
+        id_ticket_selector = f".ng-scope:nth-child({item_index}) > .col2 .ngCellText"
+        id_ticket = "No encontrado"
+        try:
+            page.locator(id_ticket_selector).first.wait_for(state="visible", timeout=10000)
+            id_ticket = page.locator(id_ticket_selector).first.inner_text().strip()
+            print(f"ID del Ticket Helix detectado: {id_ticket}")
+        except Exception as e:
+            print(f"Aviso: No se pudo extraer el ID del ticket: {e}")
+
         # 1. Hacer clic en la fila para entrar al ítem
         fila_selector = f".ng-scope:nth-child({item_index}) > .col2 .ngCellText"
         page.locator(fila_selector).first.click()
@@ -882,7 +1408,7 @@ def obtener_detalle_item(page, item_index=1, conn=None):
                 clave_segura = clave.replace('é', 'e').replace('í', 'i')
                 print(f"  {clave_segura}: {valor}")
                 
-            validar_datos_condicionales(datos_extraidos, conn, page, frame)
+            validar_datos_condicionales(datos_extraidos, conn, page, frame, id_ticket=id_ticket)
         else:
             print("Fallo: No se vio ningun texto de los solicitados.")
             print("Texto extraido para depurar:\n", texto)
