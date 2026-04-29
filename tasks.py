@@ -336,7 +336,7 @@ def leer_excel_masivo(ruta_archivo):
                 "cedula": str(cedula).strip(),
                 "nombre": str(nombre).strip(),
                 "correo": str(correo).strip(),
-                "usuario_referencia": str(usuario_ref).strip(),
+                "usuario_referencia": str(usuario_ref).strip().upper(),
             }
             usuarios.append(usuario)
             fila += 1
@@ -417,7 +417,7 @@ def validar_fila_creacion(cedula, nombre_completo, email_usuario, usuario_ref, c
     
     # 1. Validar que el usuario de referencia exista
     ref_fila = ejecutar_consulta_fila_db(
-        f"SELECT LOGIN, CMPN_CODIGO, ESOR_CODIGO, NOMBRE_USUARIO FROM a_usuario WHERE LOGIN = '{usuario_ref}'",
+        f"SELECT LOGIN, CMPN_CODIGO, ESOR_CODIGO, NOMBRE_USUARIO FROM a_usuario WHERE LOGIN = '{usuario_ref_upper}'",
         conn
     )
     if not ref_fila:
@@ -945,12 +945,13 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
             nombre_completo  = datos_extraidos.get("Nombre Completo", "")
             email_usuario    = datos_extraidos.get("Correo", "")
             usuario_ref      = datos_extraidos.get("Usuario de referencia DATASOFT", "")
+            usuario_ref_upper = usuario_ref.upper() if usuario_ref else ""
             linea_negocio    = datos_extraidos.get("Línea de Negocio", "")
 
             # ── 1. Validar que el usuario de referencia exista ──────────────────
             ref_fila = ejecutar_consulta_fila_db(
-                f"SELECT LOGIN, CMPN_CODIGO, ESOR_CODIGO, NOMBRE_USUARIO FROM a_usuario WHERE LOGIN = '{usuario_ref}'",
-                conn
+                f"SELECT LOGIN, CMPN_CODIGO, ESOR_CODIGO, NOMBRE_USUARIO FROM a_usuario WHERE LOGIN = '{usuario_ref_upper}'",
+              conn
             )
             if not ref_fila:
                 print("Usuario de referencia no existe. Rechazando...")
@@ -1092,7 +1093,7 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                         ejecutar_actualizacion_db(q_autr, conn)
                         q_serie = (f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
                                    f"SELECT a.AUSR_CMPN_CODIGO, a.AUSR_ESOR_CODIGO, a.AUSR_SRDC_CODIGO, a.AUSR_DCMT_CODIGO, '{login_existente}', '{nombre_completo}' "
-                                   f"FROM autorizado_serie WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'"
+                                   f"FROM autorizado_serie a WHERE AUSR_AUTR_CODIGO = '{usuario_ref_upper}'"
                                    f"AND NOT EXISTS (SELECT 1 FROM autorizado_serie b WHERE b.AUSR_CMPN_CODIGO = a.AUSR_CMPN_CODIGO "
                                    f"AND b.AUSR_ESOR_CODIGO = a.AUSR_ESOR_CODIGO "
                                    f"AND b.AUSR_SRDC_CODIGO = a.AUSR_SRDC_CODIGO "
@@ -1183,7 +1184,7 @@ Por favor, genere un nuevo requerimiento para la creacion del usuario."""
                 q_serie = (
                     f"INSERT INTO autorizado_serie (AUSR_CMPN_CODIGO, AUSR_ESOR_CODIGO, AUSR_SRDC_CODIGO, AUSR_DCMT_CODIGO, AUSR_AUTR_CODIGO, AUTR_NOMBRE) "
                     f"SELECT a.AUSR_CMPN_CODIGO, a.AUSR_ESOR_CODIGO, a.AUSR_SRDC_CODIGO, a.AUSR_DCMT_CODIGO, '{nuevo_login}', '{nombre_completo}' "
-                    f"FROM autorizado_serie a WHERE AUSR_AUTR_CODIGO = '{usuario_ref}'"
+                    f"FROM autorizado_serie a WHERE AUSR_AUTR_CODIGO = '{usuario_ref_upper}'"
                     f"AND NOT EXISTS (SELECT 1 FROM autorizado_serie b WHERE b.AUSR_CMPN_CODIGO = a.AUSR_CMPN_CODIGO "
                     f"AND b.AUSR_ESOR_CODIGO = a.AUSR_ESOR_CODIGO "
                     f"AND b.AUSR_SRDC_CODIGO = a.AUSR_SRDC_CODIGO "
@@ -1428,7 +1429,7 @@ def login_smartit():
     # Configurar el navegador
     browser.configure(
         browser_engine="chromium",
-        headless=False, # Necesitamos ver el navegador
+        headless=True, # Necesitamos ver el navegador
         isolated=False,  # Modo Incógnito / Contexto limpio
     )
     
