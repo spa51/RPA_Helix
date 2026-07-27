@@ -146,11 +146,11 @@ def procesar_masiva(datos_extraidos, conn, page, frame, tipo_solicitud, id_ticke
     
     for idx, usuario in enumerate(usuarios, start=1):
         if es_activacion:
-            res = validar_fila_activacion(usuario["cedula"], usuario["usuario_referencia"], conn)
+            res = validar_fila_activacion(usuario["cedula"], "", conn)
         elif es_creacion:
             res = validar_fila_creacion(usuario["cedula"], usuario["nombre"], usuario["correo"], usuario["usuario_referencia"], conn)
         else:
-            res = validar_fila_activacion(usuario["cedula"], usuario["usuario_referencia"], conn)
+            res = validar_fila_activacion(usuario["cedula"], "", conn)
         resultados.append(res)
         if res["exito"]: exitosos += 1
         else: fallidos += 1

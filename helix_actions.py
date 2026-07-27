@@ -52,10 +52,10 @@ def descargar_adjunto_excel(page, frame):
     except Exception as e:
         print(f"Error al descargar el adjunto Excel: {e}")
         downloads_path = os.path.join(os.path.expanduser("~"), "Downloads")
-        archivos_excel = glob.glob(os.path.join(downloads_path, "Planilla*.xlsx"))
+        archivos_excel = glob.glob(os.path.join(downloads_path, "*.xlsx")) + glob.glob(os.path.join(downloads_path, "*.xls"))
         if archivos_excel:
             mas_reciente = max(archivos_excel, key=os.path.getmtime)
-            print(f"Fallback: Usando archivo más reciente encontrado: {mas_reciente}")
+            print(f"Fallback: Usando archivo más reciente encontrado en Downloads: {mas_reciente}")
             return mas_reciente
         return None
 
