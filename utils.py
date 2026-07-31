@@ -56,7 +56,7 @@ def leer_excel_masivo(ruta_archivo):
     usuarios = []
     
     try:
-        wb = openpyxl.load_workbook(ruta_archivo, read_only=True, data_only=True)
+        wb = openpyxl.load_workbook(ruta_archivo, data_only=True)
         ws = wb.active  # Tomar la primera hoja
         
         # Verificar encabezados en fila 12

@@ -42,7 +42,7 @@ def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, passwo
         glpi_page.locator("li.select2-results__option", has_text="Aplicaciones > Administración de usuarios Bancolombia Banco").first.click()
         
         # 2. Asignado a
-        print("Asignando usuario: Jose Luis Echavarria Ochoa...")
+        print("Asignando usuario: Cristian Mejia Moreno...")
         
         # Esperamos a que apareza al menos un input de select2
         glpi_page.locator("input.select2-search__field").first.wait_for(state="visible", timeout=10000)
@@ -61,11 +61,11 @@ def generar_informe_glpi(page, datos_extraidos=None, login_generado=None, passwo
             
         search_assign.scroll_into_view_if_needed()
         search_assign.click()
-        search_assign.fill("Jose")
+        search_assign.fill("Cristian")
         
         # Esperamos que cargue la lista flotante y damos clic
         glpi_page.wait_for_timeout(2000) # dar un instante para que reaccione GLPI
-        opcion_busqueda = glpi_page.locator("li.select2-results__option", has_text="Jose Luis Echavarria Ochoa").first
+        opcion_busqueda = glpi_page.locator("li.select2-results__option", has_text="Cristian Mejia Moreno").first
         opcion_busqueda.wait_for(state="visible", timeout=10000)
         opcion_busqueda.click()
         
